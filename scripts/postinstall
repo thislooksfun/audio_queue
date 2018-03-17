@@ -8,6 +8,3 @@ ff_bin=/Applications/FirefoxDeveloperEdition.app/Contents/MacOS/firefox-bin
 
 # Write the binary path to disk
 echo -n "$ff_bin" > ./ff_bin_path.txt
-
-# Make a new profile
-# "$ff_bin" -CreateProfile audio_queue "$(pwd)/firefoxProfile"
