@@ -12,7 +12,7 @@ module.exports = async function(driver, item, log) {
     // Wait for video to finish
     while (true) {
       var info = await driver.executeScript(scripts.status);
-      log.debug('playing', info);
+      log.debug('Playing', info);
       if (info.ended || info.status == 'postroll') break;
       await driver.sleep(1000);
     }

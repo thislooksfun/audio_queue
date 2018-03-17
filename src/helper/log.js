@@ -6,7 +6,7 @@ var debugMode = process.argv.length >= 3 && process.argv[2] === '-d';
 
 function log(prefix, ...messages) {
   var msgs = [];
-  for (m of messages) {
+  for (var m of messages) {
     var msg = '';
     switch (typeof m) {
       case "string":

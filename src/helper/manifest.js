@@ -36,7 +36,7 @@ function processExtensionInfo(ext, servPath, servName, ffExtPath) {
   var servExtPath = path.join(ffExtPath, 'scripts', servName);
   fs.mkdirpSync(servExtPath);
   var ffJS = [];
-  for (f of ext.js) {
+  for (var f of ext.js) {
     if (path.extname(f) !== '.js') continue;
     
     var fPath = path.join(servPath, f);

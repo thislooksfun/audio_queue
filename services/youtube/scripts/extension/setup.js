@@ -22,7 +22,6 @@ setInterval(function() {
       ytp.status = 'preroll';
     }
     ytp.canSkipAd = selectorVisible('#player .video-ads .videoAdUiSkipButton');
-    console.log(ytp.canSkipAd);
   } else {
     vid.muted = false;
     // Playing main video, possibly with a popup ad

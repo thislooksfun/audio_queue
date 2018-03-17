@@ -49,7 +49,7 @@ module.exports = {
     var pathParts = key.split('.');
     pathParts.shift(); //always starts with one (_) that we can ignore.
     var obj = forObj;
-    for (p of pathParts) {
+    for (var p of pathParts) {
       obj = obj[p];
       if (obj == null) {
         return {s: false, type: 'missing'};
@@ -65,7 +65,7 @@ module.exports = {
       }
       
       var arrType = null;
-      for (i of obj) {
+      for (var i of obj) {
         var itype = typeof i;
         if (arrType != null && itype !== arrType) {
           return {s: false, type: 'mismatch', expected: `array of ${innerType}s`, got: 'mixed-type array'};
