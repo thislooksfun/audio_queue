@@ -43,7 +43,7 @@ function eventHappened() {
   
   var sbp = window.wrappedJSObject.tlf_YTPlayer.shouldBePlaying;
   vid.muted = !sbp;
-  vid.volume = spb ? 1.0 : 0.0;
+  vid.volume = sbp ? 1.0 : 0.0;
   
   var lg2 = 'af: ' + vid.muted + ':' + vid.volume;
   
