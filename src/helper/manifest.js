@@ -1,7 +1,7 @@
 const fs   = require('fs-extra');
 const path = require('path');
 const log  = require('./log');
-const util = require('./util');
+const misc = require('./misc');
 
 const requiredKeys = {
   name: 'string',
@@ -27,7 +27,7 @@ function processExtensionInfo(ext, servPath, servName, ffExtPath) {
   if (typeof ext !== 'object') {
     return {s: false, msgs: ["Key 'extension' must be a dict"]};
   }
-  if (!util.verifyKeys(servName, ext, ext_requiredKeys, 'extension.')) {
+  if (!misc.verifyKeys(servName, ext, ext_requiredKeys, 'extension.')) {
     return {s: false}
   }
   
@@ -74,7 +74,7 @@ module.exports = {
       return lerr(`Error loading manifest for service '${serviceFolder}': mnfst is null or undefined (This should never happen. If it does, please report it at https://github.com/thislooksfun/audio_queue and include the manifest.json used)`);
     }
     
-    if (!util.verifyKeys(serviceFolder, mnfst, requiredKeys)) {
+    if (!misc.verifyKeys(serviceFolder, mnfst, requiredKeys)) {
       return null;  // Error message was aleady printed
     }
     

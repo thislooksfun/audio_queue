@@ -4,7 +4,7 @@ const path = require('path');
 // Local imports
 const log           = require('./log');
 const manifest      = require('./manifest');
-const {projectRoot} = require('./util');
+const {projectRoot} = require('./misc');
 
 var services = {};
 

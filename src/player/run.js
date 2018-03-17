@@ -1,7 +1,7 @@
-const log      = require('./helper/log');
-const queue    = require('./helper/queue');
-const manifest = require('./helper/manifest');
-const {sleep}  = require('./helper/util');
+const log      = require('../helper/log');
+const queue    = require('../helper/queue');
+const manifest = require('../helper/manifest');
+const {sleep}  = require('../helper/misc');
 
 const unmuteScript = "window.postMessage({tlf_audio_queue_mute_signal: false}, '*');";
 

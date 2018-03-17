@@ -12,7 +12,6 @@
   "dependencies": {
     "fs": "0.0.1-security",
     "fs-extra": "^5.0.0",
-    "mitmproxy": "^1.7.1",
     "selenium-webdriver": "^3.6.0"
   }
 }

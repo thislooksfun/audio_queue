@@ -1,7 +1,7 @@
 "use strict";
 
-const {sleep} = require('./helper/util');
-const log     = require('./helper/log');
+const {sleep} = require('../helper/misc');
+const log     = require('../helper/log');
 
 const init = require('./init');
 const run  = require('./run');

@@ -4,7 +4,7 @@ const fs        = require('fs-extra');
 const webdriver = require('selenium-webdriver');
 const firefox   = require('selenium-webdriver/firefox');
 // Local imports
-const {projectRoot} = require('./util');
+const {projectRoot} = require('./misc');
 
 // Get the Firefox binary path
 const ffBinary = fs.readFileSync(path.join(projectRoot, 'ff_bin_path.txt'), 'utf-8');
