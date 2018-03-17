@@ -1,3 +1,5 @@
+"use strict";
+
 // Mute any new tabs
 browser.tabs.onCreated.addListener(function(tab) { setMute(tab.id, true); });
 

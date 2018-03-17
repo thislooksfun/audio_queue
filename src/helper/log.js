@@ -1,3 +1,5 @@
+"use strict";
+
 const util = require('util');
 
 var debugMode = process.argv.length >= 3 && process.argv[2] === '-d';

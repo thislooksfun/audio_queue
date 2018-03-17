@@ -1,3 +1,5 @@
+"use strict";
+
 // Global imports
 const path      = require('path');
 const fs        = require('fs-extra');

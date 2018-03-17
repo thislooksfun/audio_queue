@@ -1,3 +1,5 @@
+"use strict";
+
 const log      = require('../helper/log');
 const queue    = require('../helper/queue');
 const manifest = require('../helper/manifest');

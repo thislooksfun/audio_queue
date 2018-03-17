@@ -1,3 +1,5 @@
+"use strict";
+
 var vid = document.querySelector('#player .html5-main-video');
 return {
   status: window.tlf_YTPlayer.status,

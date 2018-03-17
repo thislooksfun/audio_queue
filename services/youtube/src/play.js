@@ -1,3 +1,5 @@
+"use strict";
+
 const {By, until} = require('selenium-webdriver');
 const {scripts, urls} = require('./constants');
 

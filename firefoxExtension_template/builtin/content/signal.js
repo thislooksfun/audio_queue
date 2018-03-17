@@ -1,3 +1,5 @@
+"use strict";
+
 // Listen for message from page
 window.addEventListener("message", function(event) {
   if (event.source != window) return;

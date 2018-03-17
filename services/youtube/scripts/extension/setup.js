@@ -1,3 +1,5 @@
+"use strict";
+
 var vid = document.querySelector('#player .html5-main-video');
 
 var wjo = window.wrappedJSObject;
