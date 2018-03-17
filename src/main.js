@@ -14,7 +14,7 @@ const ffBinary = fs.readFileSync(path.join(__dirname, '../ff_bin_path.txt'), 'ut
 
 const profile = new firefox.Profile();
 profile.setPreference("xpinstall.signatures.required", false);
-profile.addExtension(path.join(__dirname, '../firefoxExtension_template'));
+profile.addExtension(path.join(__dirname, '../firefoxExtension'));
 
 const firefoxOptions = new firefox.Options();
 firefoxOptions.setBinary(ffBinary);
@@ -33,16 +33,18 @@ var services = {};
   
   var servicesPath = path.join(__dirname, '../services');
   for (var s of fs.readdirSync(servicesPath)) {
-    var mnfst = manifest.parse(servicesPath, s);
+    var mnfst = manifest.parse(servicesPath, s, ffExtPath);
     if (mnfst != null) {
       services[mnfst.name] = {prep: mnfst.prep, play: mnfst.play};
-      if (mnfst.raw.extension) {
-        ffExtManifest.content_scripts.push(mnfst.raw.extension);
+      
+      // TODO: Process the extension script stuff in helper/manifest.js
+      if (mnfst.extension != null) {
+        ffExtManifest.content_scripts.push(mnfst.extension);
       }
     }
   }
   
-  fs.writeFileSync(ffExtManPath, JSON.stringify(ffExtManifest));
+  fs.writeFileSync(ffExtManPath, JSON.stringify(ffExtManifest, null, 2));
   setTimeout(start, 1000);
 })();
 

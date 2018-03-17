@@ -1,6 +1,6 @@
 var vid = document.querySelector('#player .html5-main-video');
 
-window.tlf_YTPlayer = {status: 'unknown', shouldBePlaying: false};
+window.wrappedJSObject.tlf_YTPlayer = cloneInto({status: 'unknown', shouldBePlaying: false}, window);
 
 function selectorVisible(selector) {
   return getComputedStyle(document.querySelector(selector), null).display !== 'none';
@@ -41,7 +41,7 @@ var mediaEvents = [
 function eventHappened() {
   var lg1 = 'b4: ' + vid.muted + ':' + vid.volume;
   
-  var sbp = window.tlf_YTPlayer.shouldBePlaying;
+  var sbp = window.wrappedJSObject.tlf_YTPlayer.shouldBePlaying;
   vid.muted = !sbp;
   vid.volume = spb ? 1.0 : 0.0;
   
@@ -55,22 +55,24 @@ for (evt of mediaEvents) {
 }
 
 setInterval(function() {
-  vid.muted = !window.tlf_YTPlayer.shouldBePlaying;
+  vid.muted = !window.wrappedJSObject.tlf_YTPlayer.shouldBePlaying;
   
   var adShown = selectorVisible('#player .video-ads');
   var videoAd = adShown && selectorVisible('#player .video-ads .videoAdUi');
   
   if (adShown && videoAd) {
     vid.muted = true;
-    if (window.tlf_YTPlayer.status === 'main') {
-      window.tlf_YTPlayer.status = 'postroll';
+    if (window.wrappedJSObject.tlf_YTPlayer.status === 'main') {
+      window.wrappedJSObject.tlf_YTPlayer.status = 'postroll';
     } else {
-      window.tlf_YTPlayer.status = 'preroll';
-      window.tlf_YTPlayer.canSkipAd = selectorVisible('#player .video-ads .videoAdUiSkipButton');
+      window.wrappedJSObject.tlf_YTPlayer.status = 'preroll';
+      window.wrappedJSObject.tlf_YTPlayer.canSkipAd = selectorVisible('#player .video-ads .videoAdUiSkipButton');
     }
   } else {
     // Playing main video, possibly with a popup ad
-    window.tlf_YTPlayer.status = 'main';
-    window.tlf_YTPlayer.canSkipAd = undefined;
+    window.wrappedJSObject.tlf_YTPlayer.status = 'main';
+    window.wrappedJSObject.tlf_YTPlayer.canSkipAd = undefined;
   }
 }, 50);
+
+console.log('setup.js loaded');

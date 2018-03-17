@@ -8,5 +8,10 @@
   "scripts": {
     "prep": "src/prep.js",
     "play": "src/play.js"
+  },
+  "extension": {
+    "matches": ["*://www.youtube.com/watch?v=*"],
+    "js": ["scripts/extension/setup.js"],
+    "run_at": "document_end"
   }
 }

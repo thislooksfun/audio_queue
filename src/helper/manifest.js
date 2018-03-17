@@ -1,6 +1,7 @@
-const fs   = require('fs');
+const fs   = require('fs-extra');
 const path = require('path');
 const log  = require('./log');
+const util = require('./util');
 
 const requiredKeys = {
   name: 'string',
@@ -15,105 +16,97 @@ const requiredKeys = {
   }
 }
 
-function verifyKeys(sName, mnfst) {
-  var keysToVerify = [{path: '_', obj: requiredKeys}];
-  while (keysToVerify.length > 0) {
-    var pair = keysToVerify.shift();
-    for (var name in pair.obj) {
-      var prop = pair.obj[name];
-      var key = pair.path + '.' + name;
-      var type = typeof prop;
-      if (type === 'string') {
-        var res = verifyKey(mnfst, key, prop);
-        if (!res.s) {
-          if (res.type === 'missing') {
-            log.error(`Error parsing manifest for service ${sName}: Key ${key.substring(2)} not found`);
-            return false;
-          } else if (res.type === 'mismatch') {
-            log.error(`Error parsing manifest for service ${sName}: Type mismatch for key ${key.substring(2)} ; expected ${res.expected}, got ${res.got}`);
-            return false;
-          }
-        }
-      } else if (type === 'object') {
-        keysToVerify.push({path: key, obj: prop});
-      } else {
-        log.error(`Error reading requiredKeys dict, key ${key} is of type ${type}`);
-        return false;
-      }
-    }
+
+
+
+const ext_requiredKeys = {
+  matches: '[string]',
+  js: '[string]',
+}
+function processExtensionInfo(ext, servPath, servName, ffExtPath) {
+  if (typeof ext !== 'object') {
+    return {s: false, msgs: ["Key 'extension' must be a dict"]};
+  }
+  if (!util.verifyKeys(servName, ext, ext_requiredKeys, 'extension.')) {
+    return {s: false}
   }
   
-  return true;
+  var servExtPath = path.join(ffExtPath, 'scripts', servName);
+  fs.mkdirpSync(servExtPath);
+  var ffJS = [];
+  for (f of ext.js) {
+    if (path.extname(f) !== '.js') continue;
+    
+    var fPath = path.join(servPath, f);
+    var ffPath = path.join(servExtPath, path.basename(f));
+    fs.copySync(fPath, ffPath);
+    ffJS.push(path.relative(ffExtPath, ffPath));
+  }
+  
+  return {s: true, ff: {matches: ext.matches, js: ffJS, run_at: ext.run_at}};
 }
 
-function verifyKey(mnfst, key, val) {
-  var pathParts = key.split('.');
-  pathParts.shift(); //always starts with one (_) that we can ignore.
-  var obj = mnfst;
-  for (p of pathParts) {
-    obj = obj[p];
-    if (obj == null) {
-      return {s: false, type: 'missing'};
-    }
-  }
-  if (typeof obj !== val) {
-    return {s: false, type: 'mismatch', expected: val, got: typeof obj};
-  }
-  
-  return {s: true};
+
+// Log and explicitly return null for easy one-lining later as return type of `log.error` is not guarenteed to be null/undefined
+function lerr(...msgs) {
+  log.error(...msgs);
+  return null;
 }
 
 
 module.exports = {
-  parse: function(servicesPath, serviceFolder) {
+  parse: function(servicesPath, serviceFolder, ffExtPath) {
     var servPath = path.join(servicesPath, serviceFolder);
     var manPath = path.join(servPath, 'manifest.json');
+    log.debug(` > Attempting to open file ${manPath}`);
     if (!fs.existsSync(manPath)) {
-      log.error(`Service '${serviceFolder}' is missing a manifest.json file.`);
-      log.debug(` > Attempting to open file ${manPath}`);
-      return null;
+      return lerr(`Service '${serviceFolder}' is missing a manifest.json file.`);
     }
-
     
     var mnfst;
     try {
       mnfst = require(manPath);
     } catch (e) {
-      log.error(`Error parsing manifest for '${serviceFolder}':`, e);
-      return null;
+      return lerr(`Error loading manifest for service '${serviceFolder}':`, e);
     }
     
-    if (!verifyKeys(serviceFolder, mnfst)) {
-      return null;
+    if (mnfst == null) {
+      return lerr(`Error loading manifest for service '${serviceFolder}': mnfst is null or undefined (This should never happen. If it does, please report it at https://github.com/thislooksfun/audio_queue and include the manifest.json used)`);
+    }
+    
+    if (!util.verifyKeys(serviceFolder, mnfst, requiredKeys)) {
+      return null;  // Error message was aleady printed
     }
     
     if (path.isAbsolute(mnfst.scripts.prep)) {
-      log.error(`Error parsing manifest for '${serviceFolder}': Prep script path must be relative`);
-      return null;
+      return lerr(`Error parsing manifest for '${mnfst.name}': Prep script path must be relative`);
     }
     
     if (path.isAbsolute(mnfst.scripts.play)) {
-      log.error(`Error parsing manifest for '${serviceFolder}': Play script path must be relative`);
-      return null;
+      return lerr(`Error parsing manifest for '${mnfst.name}': Play script path must be relative`);
     }
     
-    var prep;
     try {
-      console.log('a:', path.relative(__dirname, path.join(servPath, mnfst.scripts.prep)));
-      prep = require(path.relative(__dirname, path.join(servPath, mnfst.scripts.prep)));
+      var prep = require(path.relative(__dirname, path.join(servPath, mnfst.scripts.prep)));
     } catch (e) {
-      log.error(`Error loading prep script for module '${serviceFolder}':`, e);
-      return null;
+      return lerr(`Error loading prep script for module '${mnfst.name}':`, e);
     }
     
-    var play;
     try {
-      play = require(path.relative(__dirname, path.join(servPath, mnfst.scripts.play)));
+      var play = require(path.relative(__dirname, path.join(servPath, mnfst.scripts.play)));
     } catch (e) {
-      log.error(`Error loading play script for module '${serviceFolder}':`, e);
-      return null;
+      return lerr(`Error loading play script for module '${mnfst.name}':`, e);
     }
     
-    return {raw: mnfst, name: mnfst.name, prep: prep, play: play};
+    if (mnfst.extension != null) {
+      var res = processExtensionInfo(mnfst.extension, servPath, mnfst.name, ffExtPath);
+      if (!res.s) {
+        if (res.msgs != null) log.error(`Error loading extension info for module '${mnfst.name}':`, ...res.msgs);
+        return null;
+      }
+      var ffExtInfo = res.ff;
+    }
+    
+    return {raw: mnfst, name: mnfst.name, prep: prep, play: play, extension: ffExtInfo};
   }
 }

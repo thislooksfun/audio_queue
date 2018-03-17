@@ -13,7 +13,7 @@ module.exports = async function(driver, item, log) {
     await driver.wait(until.elementLocated(By.css('#player .html5-main-video')));
     
     // Run setup scripts
-    await driver.executeScript(scripts.setup);
+    // await driver.executeScript(scripts.setup);
     
     // Disable autoplay
     await driver.wait(until.elementLocated(By.css('#autoplay + #toggle')));
