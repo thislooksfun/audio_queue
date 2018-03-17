@@ -12,25 +12,25 @@ module.exports = async function(driver, item, log) {
     // Wait until the video has appeared
     await driver.wait(until.elementLocated(By.css('#player .html5-main-video')));
     
-    // Run setup scripts
-    // await driver.executeScript(scripts.setup);
-    
     // Disable autoplay
     await driver.wait(until.elementLocated(By.css('#autoplay + #toggle')));
     try {
       driver.wait(until.elementLocated(By.css('#autoplay + #toggle[aria-pressed="true"]'))).click();
     } catch (e) {} // If the element wasn't found, ignore it.
     
+    // Wait for 2 seconds to let everything (hopefully) catch up.
+    await driver.sleep(2000);
+    
     // Wait for pre-roll to finish
     while (true) {
       var info = await driver.executeScript(scripts.status);
-      log.debug(info);
+      log.debug('Prepping', info);
       if (info.status == 'preroll' && info.canSkipAd) {
-        console.log('a');
-        await driver.sleep(1000);
-        console.log('b');
-        await driver.findElement(By.css('#player .video-ads .videoAdUiSkipButton')).click();
-        console.log('c');
+        try {
+          await driver.findElement(By.css('#player .video-ads .videoAdUiSkipButton')).click();
+        } catch (e) {
+          log.warn(e);
+        }
       }
       if (info.status == 'main') break;
       await driver.sleep(1000);

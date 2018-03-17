@@ -6,7 +6,7 @@ wjo.tlf_YTPlayer = cloneInto({status: 'unknown'}, window);
 var ytp = wjo.tlf_YTPlayer;
 
 function selectorVisible(selector) {
-  return getComputedStyle(document.querySelector(selector), null).display !== 'none';
+  return document.querySelector(selector).offsetParent !== null;
 }
 
 setInterval(function() {
@@ -18,8 +18,9 @@ setInterval(function() {
       ytp.status = 'postroll';
     } else {
       ytp.status = 'preroll';
-      ytp.canSkipAd = selectorVisible('#player .video-ads .videoAdUiSkipButton');
     }
+    ytp.canSkipAd = selectorVisible('#player .video-ads .videoAdUiSkipButton');
+    console.log(ytp.canSkipAd);
   } else {
     vid.muted = false;
     // Playing main video, possibly with a popup ad
