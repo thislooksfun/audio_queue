@@ -1,0 +1,12 @@
+{
+  "name": "youtube",
+  "title": "YouTube",
+  "author": "thislooksfun",
+  "home": "https://www.youtube.com",
+  "share": "https://www.youtube.com/watch?v=[id]",
+  "icon": "??",
+  "scripts": {
+    "prep": "src/prep.js",
+    "play": "src/play.js"
+  }
+}

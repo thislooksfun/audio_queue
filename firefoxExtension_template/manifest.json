@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+  "name": "Audio Queue",
+  "version": "1.0",
+  
+  "description": "Browser-level automation for the Audio Queue app",
+  
+  "applications": {
+    "gecko": {
+      "id": "audio_queue_extension@thislooksfun.github.com",
+      "strict_min_version": "42.0"
+    }
+  },
+  
+  "icons": {
+    "48": "icon.png"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/watch?v=*"],
+      "js": ["test.js"]
+    }
+  ]
+}
