@@ -1,6 +1,15 @@
+// Global imports
+const path = require('path');
+// Local imports
 const log = require('./log');
 
 module.exports = {
+  projectRoot: path.join(__dirname, '../../'),
+  
+  async sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  },
+  
   verifyKeys: function(sName, forObj, requiredKeys, keyPrefix) {
     keyPrefix = keyPrefix || '';
     var keysToVerify = [{path: '_', obj: requiredKeys}];

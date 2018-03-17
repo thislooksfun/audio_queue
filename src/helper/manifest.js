@@ -58,7 +58,7 @@ module.exports = {
   parse: function(servicesPath, serviceFolder, ffExtPath) {
     var servPath = path.join(servicesPath, serviceFolder);
     var manPath = path.join(servPath, 'manifest.json');
-    log.debug(` > Attempting to open file ${manPath}`);
+    log.debug(` > Parsing manifest ${manPath}`);
     if (!fs.existsSync(manPath)) {
       return lerr(`Service '${serviceFolder}' is missing a manifest.json file.`);
     }

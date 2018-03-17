@@ -16,5 +16,14 @@
     "48": "icon.png"
   },
   
-  "content_scripts": []
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["builtin/content/signal.js"]
+    }
+  ],
+  
+  "background": {
+    "scripts": ["builtin/background/auto_mute.js"]
+  }
 }

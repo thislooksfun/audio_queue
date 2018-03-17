@@ -24,9 +24,10 @@ function log(prefix, ...messages) {
 }
 
 module.exports = {
-  error:   function(...args) { log("[ERROR]", ...args); },
-  warning: function(...args) { log("[WARN] ", ...args); },
-  info:    function(...args) { log("[INFO] ", ...args); },
-  trace:   function(...args) { log("[TRACE]", ...args); },
-  debug:   function(...args) { if (debugMode) log("[DEBUG] ", ...args); }
+    fatal(...args) { log("[FATAL]", ...args); process.exit(1); },
+    error(...args) { log("[ERROR]", ...args); },
+  warning(...args) { log("[WARN] ", ...args); },
+     info(...args) { log("[INFO] ", ...args); },
+    trace(...args) { log("[TRACE]", ...args); },
+    debug(...args) { if (debugMode) log("[DEBUG]", ...args); }
 }
