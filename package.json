@@ -5,13 +5,20 @@
   "scripts": {
     "postinstall": "chmod +x scripts/postinstall && ./scripts/postinstall",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./scripts/run"
+    "start": "./scripts/run",
+    "sass": "./scripts/sass"
   },
   "author": "thislooksfun",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
     "fs": "0.0.1-security",
     "fs-extra": "^5.0.0",
     "selenium-webdriver": "^3.6.0"
+  },
+  "devDependencies": {
+    "bourbon": "^5.0.0",
+    "node-sass": "^4.7.2"
   }
 }

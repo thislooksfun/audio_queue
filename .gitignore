@@ -60,3 +60,4 @@ typings/
 # Generated files
 firefoxExtension/
 ff_bin_path.txt
+.sass-cache/

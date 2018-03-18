@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css?family=Cutive+Mono");
+body {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: #000;
+  color: #fff;
+  font-family: monospace; }
+  body.fonts-loaded {
+    font-family: "Cutive Mono", monospace; }
+
+.center_block {
+  text-align: center;
+  grid-column: main-start;
+  grid-row: middle-start; }
+  .center_block h1 {
+    font-size: 50px; }
+  .center_block input[type=text] {
+    display: block;
+    padding-top: 10px;
+    margin: auto;
+    width: 260px;
+    background-color: rgba(0, 0, 0, 0);
+    border: 0;
+    border-bottom: 2px solid #fff;
+    font-family: "Cutive Mono", monospace;
+    text-align: center;
+    color: #fff;
+    font-size: 15px;
+    line-height: 30px;
+    transition: border-color 0.15s ease; }
+    .center_block input[type=text]:focus {
+      border-color: #2C75FF;
+      outline-width: 0;
+      outline: none; }
+
+#main {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: [left-start] 25% [main-start] 50% [right-start] 25% [right-end];
+  grid-template-rows: [top-start] auto [middle-start] auto [bottom-start] auto [bottom-end]; }
+
+/*# sourceMappingURL=home.css.map */

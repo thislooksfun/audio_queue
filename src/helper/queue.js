@@ -28,10 +28,9 @@ module.exports = {
     
     var item = queue.shift();
     
-    var n = { driver: drivers.newDriver(), item: item, service: services.getService(item.serviceName) };
-    await n.service.prep(n.driver, n.item, log);
-    n.ready = true;
-    this.next = n;
+    this.next = { driver: drivers.newDriver(), item: item, service: services.getService(item.serviceName), ready: false};
+    await this.next.service.prep(this.next.driver, this.next.item, log);
+    this.next.ready = true;
   },
   
   get empty() { return queue.length === 0; },

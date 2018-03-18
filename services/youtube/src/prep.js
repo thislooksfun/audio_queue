@@ -9,12 +9,11 @@ module.exports = async function(driver, item, log) {
   log.trace('Prepping...');
   try {
     // Load the page
+    log.debug(`Opening page ${baseURL + item.id}`);
     await driver.get(baseURL + item.id);
     
-    // Wait until the video has appeared
-    await driver.wait(until.elementLocated(By.css('#player .html5-main-video')));
-    
     // Disable autoplay
+    log.debug('Disabling autoplay')
     await driver.wait(until.elementLocated(By.css('#autoplay + #toggle')));
     try {
       driver.wait(until.elementLocated(By.css('#autoplay + #toggle[aria-pressed="true"]'))).click();

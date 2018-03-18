@@ -17,22 +17,24 @@ module.exports = async function() {
         play = queue.current.service.play(queue.current.driver, queue.current.item, log);
       }
       
-      if (queue.next == null)
+      if (queue.next == null) {
         await queue.getAndPrepNext();
+      }
       
       if (queue.current != null) {
         await play;
         queue.current.driver.quit();
       }
       
-      if (queue.next == null || queue.next.ready) {
+      if (queue.next == null) {
+        queue.current = null;
+        if (queue.empty) {
+          await sleep(1000);
+        }
+      } else if (queue.next.ready) {
         queue.current = queue.next;
         queue.next = null;
-      }
-      
-      var nothingQueued = (queue.current == null && queue.next == null && queue.empty)
-      
-      if (nothingQueued) {
+      } else {
         await sleep(1000);
       }
     }

@@ -1,0 +1,16 @@
+// @import "bourbon";
+@import "../global/base";
+@import "block";
+
+#main {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  
+  // Grid
+  display: grid;
+  grid-template-columns: [left-start] 25% [main-start] 50% [right-start] 25% [right-end];
+  grid-template-rows: [top-start] auto [middle-start] auto [bottom-start] auto [bottom-end];
+}
