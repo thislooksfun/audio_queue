@@ -5,14 +5,7 @@ const drivers  = require('./drivers');
 const services = require('./services');
 
 // Item format: {serviceName: string, id: string, name: string, length: number}
-// var queue = [];
-var queue = [
-  {serviceName: 'youtube', id: process.argv[3], name: '??', length: 100},
-  {serviceName: 'youtube', id: process.argv[4], name: '??', length: 100}
-];
-
-// setTimeout(function() {addToQueue({serviceName: 'youtube', id: process.argv[5], name: '??', length: 100})}, 60*1000);
-// setTimeout(function() {addToQueue({serviceName: 'youtube', id: process.argv[6], name: '??', length: 100})}, 120*1000);
+var queue = [];
 
 module.exports = {
   current: null,
@@ -35,10 +28,10 @@ module.exports = {
     
     var item = queue.shift();
     
-    this.next = { driver: drivers.newDriver(), item: item, service: services.getService(item.serviceName) };
-    await this.next.service.prep(this.next.driver, this.next.item, log);
-    this.next.ready = true;
-    return this.next;
+    var n = { driver: drivers.newDriver(), item: item, service: services.getService(item.serviceName) };
+    await n.service.prep(n.driver, n.item, log);
+    n.ready = true;
+    this.next = n;
   },
   
   get empty() { return queue.length === 0; },
