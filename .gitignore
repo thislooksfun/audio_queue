@@ -61,3 +61,6 @@ typings/
 firefoxExtension/
 ff_bin_path.txt
 .sass-cache/
+
+# Notes to self
+.scratchpad
