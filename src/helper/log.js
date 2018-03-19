@@ -25,11 +25,15 @@ function log(prefix, ...messages) {
   console.log(prefix, ...msgs);
 }
 
-module.exports = {
+const out = {
   fatal(...args) { log("[FATAL]", ...args); process.exit(1); },
   error(...args) { log("[ERROR]", ...args); },
    warn(...args) { log("[WARN] ", ...args); },
    info(...args) { log("[INFO] ", ...args); },
   trace(...args) { log("[TRACE]", ...args); },
   debug(...args) { if (debugMode) log("[DEBUG]", ...args); }
-}
+};
+
+out.debug('Debug mode enabled');
+
+module.exports = out;
