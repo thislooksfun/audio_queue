@@ -11,6 +11,9 @@ const log   = require('../helper/log');
 const queue = require('../helper/queue');
 // Settings
 const {port, version, bonjour_name} = require('../settings');
+const {projectRoot} = require('../helper/misc');
+
+const webRoot = path.join(projectRoot, 'web');
 
 const app = express();
 
@@ -32,18 +35,19 @@ module.exports = {
     log.info('Starting server...');
     
     log.trace(' > Publishing Bonjour service');
-    let a = bonjour.publish({name: bonjour_name, type: 'http', port: port, subtypes: ['tlf-audio-queue'], txt: {version: version}});
+    // let a = bonjour.publish({name: bonjour_name, type: 'tlfcustomtype', port: port, subtypes: [], txt: {version: version}});
+    let a = bonjour.publish({name: bonjour_name, type: 'http2', port: port, subtypes: [], txt: {version: version}});
     log.debug(a.type);
         
-    // app.set('views', './web/html')
+    // app.set('views', path.join(webRoot, 'html'));
     
     log.trace(' > Publishing Bonjour service');
-    app.use('/static', express.static(__dirname + '/web/public'));
+    app.use('/static', express.static(path.join(webRoot, 'public')));
     app.use(bodyParser.json());
     
     log.trace(' > Setting up routes');
     app.get('/', function(req, res) {
-      res.sendFile(path.join(__dirname, 'web/html/home.htm'));
+      res.sendFile(path.join(webRoot, 'html/home.htm'));
     });
     app.post('/api/queue', function(req, res) {
       queue.add({serviceName: 'youtube', id: req.body.id, name: '????', length: 4});
