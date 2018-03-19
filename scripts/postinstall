@@ -3,9 +3,40 @@
 chmod +x ./scripts/run
 chmod +x ./scripts/sass
 
+
+OS=$(uname)
+
 # Find FireFox binary
-# TODO
-ff_bin=/Applications/FirefoxDeveloperEdition.app/Contents/MacOS/firefox-bin
+if [ $OS == "Darwin" ] || [ $OS == "Linux" ]; then  # Unix
+  echo -n "Locating Firefox Developer Edition..."
+  if [ $OS == "Darwin" ]; then  # macOS
+    ff_dev_app_name="FirefoxDeveloperEdition1.app"
+  else  # Linux
+    ff_dev_app_name="firefox-developer-edition"
+  fi
+  ff_dev=$(find / -name "$ff_dev_app_name" -print -quit 2>/dev/null)
+  
+  if [ -z "$ff_dev" ]; then
+    echo -n "\nERROR: Firefox Developer Edition not found\n"
+    exit 1
+  else
+    echo " Found! ($ff_dev)"
+  fi
+  
+  echo -n "Locating Firefox Developer Edition Binary..."
+  ff_bin=$(find "$ff_dev" -name "firefox-bin" -print -quit 2>/dev/null)
+  
+else  # Windows
+  echo -n "Locating Firefox Developer Edition Binary..."
+  ff_bin=$(find / -name "FirefoxDeveloperEdition.exe" -print -quit 2>/dev/null)
+fi
+
+if [ -z "$ff_bin" ]; then
+  echo -n "\nERROR: Firefox Developer Edition binary not found\n"
+  exit 1
+else
+  echo " Found! ($ff_bin)"
+fi
 
 # Write the binary path to disk
 echo -n "$ff_bin" > ./ff_bin_path.txt
