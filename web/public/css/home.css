@@ -19,7 +19,7 @@ body {
   grid-column: main-start;
   grid-row: middle-start; }
   .center_block h1 {
-    font-size: 40px; }
+    font-size: 50px; }
   .center_block span {
     font-size: 17px; }
   .center_block input[type=text] {
