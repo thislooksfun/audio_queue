@@ -10,7 +10,7 @@ OS=$(uname)
 if [ $OS == "Darwin" ] || [ $OS == "Linux" ]; then  # Unix
   echo -n "Locating Firefox Developer Edition..."
   if [ $OS == "Darwin" ]; then  # macOS
-    ff_dev_app_name="FirefoxDeveloperEdition1.app"
+    ff_dev_app_name="FirefoxDeveloperEdition.app"
   else  # Linux
     ff_dev_app_name="firefox-developer-edition"
   fi
