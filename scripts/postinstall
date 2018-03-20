@@ -18,7 +18,7 @@ if [ $OS == "Darwin" ] || [ $OS == "Linux" ]; then  # Unix
   ff_dev=$(find / -name "$ff_dev_app_name" -print -quit 2>/dev/null)
   
   if [ -z "$ff_dev" ]; then
-    echo -n "\nERROR: Firefox Developer Edition not found\n"
+    echo -e "\nERROR: Firefox Developer Edition not found"
     exit 1
   else
     echo " Found! ($ff_dev)"
@@ -33,7 +33,7 @@ else  # Windows
 fi
 
 if [ -z "$ff_bin" ]; then
-  echo -n "\nERROR: Firefox Developer Edition binary not found\n"
+  echo -e "\nERROR: Firefox Developer Edition binary not found"
   exit 1
 else
   echo " Found! ($ff_bin)"
