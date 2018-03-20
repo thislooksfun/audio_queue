@@ -1,6 +1,0 @@
-#!/bin/bash
-
-echo "Linting..."
-eslint .
-
-# echo "Testing..."
