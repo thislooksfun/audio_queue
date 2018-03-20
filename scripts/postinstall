@@ -2,6 +2,7 @@
 
 chmod +x ./scripts/run
 chmod +x ./scripts/sass
+chmod +x ./scripts/lint
 
 
 OS=$(uname)

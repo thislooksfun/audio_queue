@@ -4,7 +4,7 @@
   "description": "STUFF",
   "scripts": {
     "postinstall": "chmod +x scripts/postinstall && ./scripts/postinstall",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./scripts/lint",
     "start": "./scripts/run",
     "sass": "./scripts/sass"
   },
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "bourbon": "^5.0.0",
+    "jslint": "^0.12.0",
     "node-sass": "^4.7.2"
   }
 }
