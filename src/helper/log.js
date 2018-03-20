@@ -14,7 +14,7 @@ function log(prefix, ...messages) {
       break;
     case "number":
     case "boolean":
-      msg = ""+m;
+      msg = "" + m;
       break;
     default:
       msg = util.inspect(m, {showHidden: true, depth: null});

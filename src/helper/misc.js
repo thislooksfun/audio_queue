@@ -47,7 +47,7 @@ module.exports = {
 
   verifyKeyType: function(forObj, key, type) {
     var pathParts = key.split(".");
-    pathParts.shift(); //always starts with one (_) that we can ignore.
+    pathParts.shift(); // always starts with one (_) that we can ignore.
     var obj = forObj;
     for (var p of pathParts) {
       obj = obj[p];
@@ -56,7 +56,7 @@ module.exports = {
       }
     }
     if (/\[.+\]/.test(type)) {
-      var innerType = type.substring(1, type.length-1);
+      var innerType = type.substring(1, type.length - 1);
       if (typeof obj !== "object" || !Array.isArray(obj)) {
         return {s: false, type: "mismatch", expected: `array of ${innerType}s`, got: typeof obj};
       }
