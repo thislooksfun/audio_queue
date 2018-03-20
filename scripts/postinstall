@@ -1,43 +1,45 @@
 #!/bin/bash
 
-chmod +x ./scripts/run
 chmod +x ./scripts/sass
-chmod +x ./scripts/test
 
 
-OS=$(uname)
+if [ ! -f "./ff_bin_path.txt" ]; then
+  OS=$(uname)
 
-# Find FireFox binary
-if [ $OS == "Darwin" ] || [ $OS == "Linux" ]; then  # Unix
-  echo -n "Locating Firefox Developer Edition..."
-  if [ $OS == "Darwin" ]; then  # macOS
-    ff_dev_app_name="FirefoxDeveloperEdition.app"
-  else  # Linux
-    ff_dev_app_name="firefox-developer-edition"
+  # Find FireFox binary
+  if [ $OS == "Darwin" ] || [ $OS == "Linux" ]; then  # Unix
+    echo -n "Locating Firefox Developer Edition..."
+    if [ $OS == "Darwin" ]; then  # macOS
+      ff_dev_app_name="FirefoxDeveloperEdition.app"
+    else  # Linux
+      ff_dev_app_name="firefox-developer-edition"
+    fi
+    ff_dev=$(find / -name "$ff_dev_app_name" -print -quit 2>/dev/null)
+    
+    if [ -z "$ff_dev" ]; then
+      echo -e "\nERROR: Firefox Developer Edition not found"
+      exit 1
+    else
+      echo " Found! ($ff_dev)"
+    fi
+    
+    echo -n "Locating Firefox Developer Edition Binary..."
+    ff_bin=$(find "$ff_dev" -name "firefox-bin" -print -quit 2>/dev/null)
+    
+  else  # Windows
+    echo -n "Locating Firefox Developer Edition Binary..."
+    ff_bin=$(find / -name "FirefoxDeveloperEdition.exe" -print -quit 2>/dev/null)
   fi
-  ff_dev=$(find / -name "$ff_dev_app_name" -print -quit 2>/dev/null)
-  
-  if [ -z "$ff_dev" ]; then
-    echo -e "\nERROR: Firefox Developer Edition not found"
+
+  if [ -z "$ff_bin" ]; then
+    echo -e "\nERROR: Firefox Developer Edition binary not found"
     exit 1
   else
-    echo " Found! ($ff_dev)"
+    echo " Found! ($ff_bin)"
   fi
-  
-  echo -n "Locating Firefox Developer Edition Binary..."
-  ff_bin=$(find "$ff_dev" -name "firefox-bin" -print -quit 2>/dev/null)
-  
-else  # Windows
-  echo -n "Locating Firefox Developer Edition Binary..."
-  ff_bin=$(find / -name "FirefoxDeveloperEdition.exe" -print -quit 2>/dev/null)
-fi
 
-if [ -z "$ff_bin" ]; then
-  echo -e "\nERROR: Firefox Developer Edition binary not found"
-  exit 1
+  # Write the binary path to disk
+  echo -n "$ff_bin" > ./ff_bin_path.txt
 else
-  echo " Found! ($ff_bin)"
+  echo "./ff_bin_path.txt already exists, skipping..."
 fi
-
-# Write the binary path to disk
-echo -n "$ff_bin" > ./ff_bin_path.txt
