@@ -1,6 +1,6 @@
 #!/bin/bash
 
 echo "Linting..."
-jslint --edition=es6 **/*.js
+eslint .
 
 # echo "Testing..."

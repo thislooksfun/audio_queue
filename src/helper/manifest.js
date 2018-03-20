@@ -1,43 +1,43 @@
 "use strict";
 
-const fs   = require('fs-extra');
-const path = require('path');
-const log  = require('./log');
-const misc = require('./misc');
+const fs   = require("fs-extra");
+const path = require("path");
+const log  = require("./log");
+const misc = require("./misc");
 
 const requiredKeys = {
-  name: 'string',
-  title: 'string',
-  author: 'string',
-  home: 'string',
-  share: 'string',
-  icon: 'string',
+  name: "string",
+  title: "string",
+  author: "string",
+  home: "string",
+  share: "string",
+  icon: "string",
   scripts: {
-    prep: 'string',
-    play: 'string'
+    prep: "string",
+    play: "string"
   }
-}
+};
 
 
 
 
 const ext_requiredKeys = {
-  matches: '[string]',
-  js: '[string]',
-}
+  matches: "[string]",
+  js: "[string]",
+};
 function processExtensionInfo(ext, servPath, servName, ffExtPath) {
-  if (typeof ext !== 'object') {
+  if (typeof ext !== "object") {
     return {s: false, msgs: ["Key 'extension' must be a dict"]};
   }
-  if (!misc.verifyKeys(servName, ext, ext_requiredKeys, 'extension.')) {
-    return {s: false}
+  if (!misc.verifyKeys(servName, ext, ext_requiredKeys, "extension.")) {
+    return {s: false};
   }
   
-  var servExtPath = path.join(ffExtPath, 'scripts', servName);
+  var servExtPath = path.join(ffExtPath, "scripts", servName);
   fs.mkdirpSync(servExtPath);
   var ffJS = [];
   for (var f of ext.js) {
-    if (path.extname(f) !== '.js') continue;
+    if (path.extname(f) !== ".js") continue;
     
     var fPath = path.join(servPath, f);
     var ffPath = path.join(servExtPath, path.basename(f));
@@ -59,7 +59,7 @@ function lerr(...msgs) {
 module.exports = {
   parse: function(servicesPath, serviceFolder, ffExtPath) {
     var servPath = path.join(servicesPath, serviceFolder);
-    var manPath = path.join(servPath, 'manifest.json');
+    var manPath = path.join(servPath, "manifest.json");
     log.debug(` > Parsing manifest ${manPath}`);
     if (!fs.existsSync(manPath)) {
       return lerr(`Service '${serviceFolder}' is missing a manifest.json file.`);
@@ -88,27 +88,28 @@ module.exports = {
       return lerr(`Error parsing manifest for '${mnfst.name}': Play script path must be relative`);
     }
     
+    var prep, play;
     try {
-      var prep = require(path.relative(__dirname, path.join(servPath, mnfst.scripts.prep)));
+      prep = require(path.relative(__dirname, path.join(servPath, mnfst.scripts.prep)));
     } catch (e) {
       return lerr(`Error loading prep script for module '${mnfst.name}':`, e);
     }
-    
     try {
-      var play = require(path.relative(__dirname, path.join(servPath, mnfst.scripts.play)));
+      play = require(path.relative(__dirname, path.join(servPath, mnfst.scripts.play)));
     } catch (e) {
       return lerr(`Error loading play script for module '${mnfst.name}':`, e);
     }
     
+    var ffExtInfo;
     if (mnfst.extension != null) {
       var res = processExtensionInfo(mnfst.extension, servPath, mnfst.name, ffExtPath);
       if (!res.s) {
         if (res.msgs != null) log.error(`Error loading extension info for module '${mnfst.name}':`, ...res.msgs);
         return null;
       }
-      var ffExtInfo = res.ff;
+      ffExtInfo = res.ff;
     }
     
     return {raw: mnfst, name: mnfst.name, prep: prep, play: play, extension: ffExtInfo};
   }
-}
+};

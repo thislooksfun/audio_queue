@@ -1,23 +1,25 @@
 "use strict";
 
-const {By, until} = require('selenium-webdriver');
-const {scripts, urls} = require('./constants');
+const {By, until} = require("selenium-webdriver");
+const {scripts} = require("./constants");
 
-const baseURL = 'https://www.youtube.com/watch?v=';
+const baseURL = "https://www.youtube.com/watch?v=";
 
 module.exports = async function(driver, item, log) {
-  log.trace('Prepping...');
+  log.trace("Prepping...");
   try {
     // Load the page
     log.debug(`Opening page ${baseURL + item.id}`);
     await driver.get(baseURL + item.id);
     
     // Disable autoplay
-    log.debug('Disabling autoplay')
-    await driver.wait(until.elementLocated(By.css('#autoplay + #toggle')));
+    log.debug("Disabling autoplay");
+    await driver.wait(until.elementLocated(By.css("#autoplay + #toggle")));
     try {
-      driver.wait(until.elementLocated(By.css('#autoplay + #toggle[aria-pressed="true"]'))).click();
-    } catch (e) {} // If the element wasn't found, ignore it.
+      driver.wait(until.elementLocated(By.css("#autoplay + #toggle[aria-pressed=\"true\"]"))).click();
+    } catch (e) {
+      // If the element wasn't found, ignore it.
+    }
     
     // Wait for 2 seconds to let everything (hopefully) catch up.
     await driver.sleep(2000);
@@ -25,15 +27,15 @@ module.exports = async function(driver, item, log) {
     // Wait for pre-roll to finish
     while (true) {
       var info = await driver.executeScript(scripts.status);
-      log.debug('Prepping', info);
-      if (info.status == 'preroll' && info.canSkipAd) {
+      log.debug("Prepping", info);
+      if (info.status == "preroll" && info.canSkipAd) {
         try {
-          await driver.findElement(By.css('#player .video-ads .videoAdUiSkipButton')).click();
+          await driver.findElement(By.css("#player .video-ads .videoAdUiSkipButton")).click();
         } catch (e) {
           log.warn(e);
         }
       }
-      if (info.status == 'main') break;
+      if (info.status == "main") break;
       await driver.sleep(1000);
     }
     
@@ -43,5 +45,5 @@ module.exports = async function(driver, item, log) {
   } catch (err) {
     log.error(err);  // Something went wrong!
   }
-  log.trace('Prep done!');
+  log.trace("Prep done!");
 };

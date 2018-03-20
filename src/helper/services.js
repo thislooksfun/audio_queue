@@ -1,25 +1,25 @@
 "use strict";
 
 // Global imports
-const fs = require('fs-extra');
-const path = require('path');
+const fs = require("fs-extra");
+const path = require("path");
 // Local imports
-const log           = require('./log');
-const manifest      = require('./manifest');
-const {projectRoot} = require('./misc');
+const log           = require("./log");
+const manifest      = require("./manifest");
+const {projectRoot} = require("./misc");
 
 var services = {};
 
 module.exports = {
   load: async function() {
-    var ffExtPath = path.join(projectRoot, 'firefoxExtension');
-    var ffExtManPath = path.join(ffExtPath, 'manifest.json');
+    var ffExtPath = path.join(projectRoot, "firefoxExtension");
+    var ffExtManPath = path.join(ffExtPath, "manifest.json");
     fs.removeSync(ffExtPath);
-    fs.copySync(path.join(projectRoot, 'firefoxExtension_template'), ffExtPath);
+    fs.copySync(path.join(projectRoot, "firefoxExtension_template"), ffExtPath);
     var ffExtManifest = require(ffExtManPath);
     
     // Load services
-    var servicesPath = path.join(projectRoot, 'services');
+    var servicesPath = path.join(projectRoot, "services");
     for (var s of fs.readdirSync(servicesPath)) {
       var mnfst = manifest.parse(servicesPath, s, ffExtPath);
       if (mnfst != null) {
@@ -41,4 +41,4 @@ module.exports = {
     if (s == null) log.fatal(`Tried to get unregisterd service by name '${name}'`);
     return s;
   }
-}
+};

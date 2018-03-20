@@ -1,10 +1,9 @@
 "use strict";
 
-const {By, until} = require('selenium-webdriver');
-const {scripts, urls} = require('./constants');
+const {scripts} = require("./constants");
 
 module.exports = async function(driver, item, log) {
-  log.trace('Playing...');
+  log.trace("Playing...");
   try {
     // Start the video
     driver.executeScript(scripts.play);
@@ -12,12 +11,12 @@ module.exports = async function(driver, item, log) {
     // Wait for video to finish
     while (true) {
       var info = await driver.executeScript(scripts.status);
-      log.debug('Playing', info);
-      if (info.ended || info.status == 'postroll') break;
+      log.debug("Playing", info);
+      if (info.ended || info.status == "postroll") break;
       await driver.sleep(1000);
     }
   } catch (err) {
     log.error(err);  // Something went wrong!
   }
-  log.trace('Playing done!');
-}
+  log.trace("Playing done!");
+};

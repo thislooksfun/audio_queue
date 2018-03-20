@@ -1,8 +1,8 @@
 "use strict";
 
-const log      = require('./log');
-const drivers  = require('./drivers');
-const services = require('./services');
+const log      = require("./log");
+const drivers  = require("./drivers");
+const services = require("./services");
 
 // Item format: {serviceName: string, id: string, name: string, length: number}
 var queue = [];
@@ -12,7 +12,7 @@ module.exports = {
   next: null,
   
   async add(i) {
-    log.trace(`Adding item ${i.name} to the queue`)
+    log.trace(`Adding item ${i.name} to the queue`);
     log.debug(i);
     queue.push(i);
     if (queue.length === 1 && this.next === null) {
@@ -34,4 +34,4 @@ module.exports = {
   },
   
   get empty() { return queue.length === 0; },
-}
+};
