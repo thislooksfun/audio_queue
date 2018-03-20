@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "bonjour": "^3.5.0",
+    "bonjour": "git+ssh://git@github.com:thislooksfun/bonjour#semver:^3.5.1",
     "express": "^4.16.3",
     "fs": "0.0.1-security",
     "fs-extra": "^5.0.0",
