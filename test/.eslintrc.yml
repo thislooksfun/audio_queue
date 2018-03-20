@@ -1,0 +1,5 @@
+env:
+  mocha: true
+extends: '../.eslintrc.yml'
+globals:
+  expect: true
