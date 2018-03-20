@@ -7,10 +7,9 @@ const express     = require('express');
 const bodyParser  = require('body-parser');
 const nodeCleanup = require('node-cleanup');
 // Local imports
-const log   = require('../helper/log');
-const queue = require('../helper/queue');
-// Settings
-const {port, version, bonjour_name} = require('../settings');
+const log           = require('../helper/log');
+const queue         = require('../helper/queue');
+const settings      = require('../settings');
 const {projectRoot} = require('../helper/misc');
 
 const webRoot = path.join(projectRoot, 'web');
@@ -35,13 +34,12 @@ module.exports = {
     log.info('Starting server...');
     
     log.trace(' > Publishing Bonjour service');
-    // let a = bonjour.publish({name: bonjour_name, type: 'tlfcustomtype', port: port, subtypes: [], txt: {version: version}});
-    let a = bonjour.publish({name: bonjour_name, type: 'http2', port: port, subtypes: [], txt: {version: version}});
+    let a = bonjour.publish({name: settings.bonjour.name, type: settings.bonjour.type, port: settings.port, subtypes: [], txt: {version: settings.version}});
+    // let a = bonjour.publish({name: bonjour_name, type: 'http2', port: port, subtypes: [], txt: {version: version}});
     log.debug(a.type);
         
     // app.set('views', path.join(webRoot, 'html'));
     
-    log.trace(' > Publishing Bonjour service');
     app.use('/static', express.static(path.join(webRoot, 'public')));
     app.use(bodyParser.json());
     
@@ -55,7 +53,7 @@ module.exports = {
     });
     
     log.trace(' > Starting server');
-    app.listen(port);
-    log.info(`Server started on port ${port}`);
+    app.listen(settings.port);
+    log.info(`Server started on port ${settings.port}`);
   }
 }
