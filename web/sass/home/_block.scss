@@ -5,7 +5,11 @@
   grid-row: middle-start;
   
   h1 {
-    font-size: 50px;
+    font-size: 40px;
+  }
+  
+  span {
+    font-size: 17px;
   }
   
   input[type=text] {
@@ -14,15 +18,16 @@
     padding-top: 10px;
     
     margin: auto;
-    width: 260px;
+    width: 70%;
     
     background-color: $color-transparant;
     border: 0;
+    border-radius: 0;
     border-bottom: 2px solid $color-text;
     font-family: $font-family;
     text-align: center;
     color: $color-text;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 30px;
     
     transition: border-color 0.15s ease;
@@ -31,6 +36,14 @@
       border-color: $color-highlight;
       outline-width: 0;
       outline: none;
+    }
+  }
+}
+
+@media screen and (min-width: $width-wide-start) {
+  .center_block {
+    input[type=text] {
+      width: 260px;
     }
   }
 }

@@ -11,6 +11,13 @@
   
   // Grid
   display: grid;
-  grid-template-columns: [left-start] 25% [main-start] 50% [right-start] 25% [right-end];
+  grid-template-columns: [left-start] 0 [main-start] 100% [right-start] 0 [right-end];
   grid-template-rows: [top-start] auto [middle-start] auto [bottom-start] auto [bottom-end];
+}
+
+@media screen and (min-width: $width-wide-start) {
+  #main {
+    grid-template-columns: [left-start] 25% [main-start] 50% [right-start] 25% [right-end];
+    grid-template-rows: [top-start] auto [middle-start] auto [bottom-start] auto [bottom-end];
+  }
 }
