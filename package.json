@@ -4,7 +4,7 @@
   "description": "STUFF",
   "scripts": {
     "postinstall": "chmod +x scripts/postinstall && ./scripts/postinstall",
-    "test": "./scripts/lint",
+    "test": "./scripts/test",
     "start": "./scripts/run",
     "sass": "./scripts/sass"
   },

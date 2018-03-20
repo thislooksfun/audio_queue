@@ -1,4 +1,0 @@
-#!/bin/bash
-
-jslint services/**/*.js
-jslint src/**/*.js
