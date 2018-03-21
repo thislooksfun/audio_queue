@@ -5,13 +5,14 @@ const path        = require("path");
 const express     = require("express");
 const bodyParser  = require("body-parser");
 // Local imports
-const log           = require("../helper/log");
-const {projectRoot} = require("../helper/misc");
-const {port}        = require("../settings");
+const log           = pquire("helper/log");
+const {projectRoot} = pquire("helper/misc");
+const {port}        = pquire("settings");
+
 // Server phases
-const frontend = require("./frontend");
-const bonjour  = require("./bonjour");
-const apiv1    = require("./api/v1");
+const frontend = pquire("frontend");
+const bonjour  = pquire("bonjour");
+const apiv1    = pquire("api/v1");
 
 const webRoot = path.join(projectRoot, "web");
 

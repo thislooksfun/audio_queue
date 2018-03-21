@@ -3,7 +3,7 @@
 // Global imports
 const path = require("path");
 // Local imports
-const log = require("../helper/log");
+const log = pquire("helper/log");
 
 module.exports = {
   register(app, webRoot) {

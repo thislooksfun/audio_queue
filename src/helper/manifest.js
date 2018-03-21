@@ -1,9 +1,11 @@
 "use strict";
 
+// Global imports
 const fs   = require("fs-extra");
 const path = require("path");
-const log  = require("./log");
-const misc = require("./misc");
+// Local imports
+const log  = pquire("log");
+const misc = pquire("misc");
 
 const requiredKeys = {
   name: "string",

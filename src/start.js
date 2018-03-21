@@ -1,10 +1,16 @@
 "use strict";
 
-const log = require("./helper/log");
-const {version} = require("./settings");
+// Make pquire global
+global.pquire = require("pquire");
 
-const player = require("./player/main");
-const server = require("./server/main");
+// Local imports
+const log       = pquire("helper/log");
+const {version} = pquire("settings");
+
+// Sections
+const player = pquire("player/main");
+const server = pquire("server/main");
+
 
 (async function() {
   try {

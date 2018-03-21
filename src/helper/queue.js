@@ -1,8 +1,9 @@
 "use strict";
 
-const log      = require("./log");
-const drivers  = require("./drivers");
-const services = require("./services");
+// Local imports
+const log      = pquire("log");
+const drivers  = pquire("drivers");
+const services = pquire("services");
 
 // Item format: {serviceName: string, id: string, name: string, length: number}
 var queue = [];

@@ -1,8 +1,8 @@
 "use strict";
 
 // Local imports
-const log   = require("../../helper/log");
-const queue = require("../helper/queue");
+const log   = pquire("helper/log");
+const queue = pquire("helper/queue");
 
 module.exports = {
   register(app) {

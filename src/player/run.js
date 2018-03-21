@@ -1,8 +1,9 @@
 "use strict";
 
-const log      = require("../helper/log");
-const queue    = require("../helper/queue");
-const {sleep}  = require("../helper/misc");
+// Local imports
+const log     = pquire("helper/log");
+const queue   = pquire("helper/queue");
+const {sleep} = pquire("helper/misc");
 
 const unmuteScript = "window.postMessage({tlf_audio_queue_mute_signal: false}, '*');";
 

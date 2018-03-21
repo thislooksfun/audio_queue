@@ -4,8 +4,8 @@
 const nodeCleanup = require("node-cleanup");
 const bonjour     = require("bonjour")();
 // Local imports
-const log      = require("../helper/log");
-const settings = require("../settings");
+const log      = pquire("helper/log");
+const settings = pquire("settings");
 
 // Unpublish bonjour before exiting.
 nodeCleanup(function (exitCode) {
