@@ -1,7 +1,7 @@
 "use strict";
 
 // Make pquire global
-global.pquire = require("pquire");
+global.pquire = require("pquire").withBaseRelative("./");
 
 // Local imports
 const log       = pquire("helper/log");
