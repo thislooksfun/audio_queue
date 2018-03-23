@@ -58,9 +58,11 @@ typings/
 .env
 
 # Generated files
+ffdev/
 firefoxExtension/
 ff_bin_path.txt
 .sass-cache/
+tmp/
 
 # Notes to self
 .scratchpad
