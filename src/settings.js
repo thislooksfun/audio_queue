@@ -16,5 +16,7 @@ module.exports = {
   bonjour: {
     name: "TLF Audio Queue",
     type: "tlf-music-queue"
-  }
+  },
+  debug: false,
+  headless: true
 };

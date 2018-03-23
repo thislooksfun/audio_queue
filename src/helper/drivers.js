@@ -6,7 +6,9 @@ const fs        = require("fs-extra");
 const webdriver = require("selenium-webdriver");
 const firefox   = require("selenium-webdriver/firefox");
 // Local imports
+const log           = pquire("helper/log");
 const {projectRoot} = pquire("misc");
+const {headless}    = pquire("settings");
 
 // Get the Firefox binary path
 const ffBinary = fs.readFileSync(path.join(projectRoot, "ff_bin_path.txt"), "utf-8");
@@ -20,7 +22,10 @@ profile.addExtension(path.join(projectRoot, "firefoxExtension"));
 const firefoxOptions = new firefox.Options();
 firefoxOptions.setBinary(ffBinary);
 firefoxOptions.setProfile(profile);
-// firefoxOptions.headless();
+if (headless) {
+  log.trace("Settings drivers to headless mode");
+  firefoxOptions.headless();
+}
 
 module.exports = {
   // Creates a new driver

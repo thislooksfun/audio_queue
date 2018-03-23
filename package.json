@@ -15,6 +15,8 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "bonjour": "git+https://github.com/thislooksfun/bonjour.git#semver:^3.5.2",
+    "command-line-args": "^5.0.2",
+    "command-line-usage": "^5.0.3",
     "express": "^4.16.3",
     "fs-extra": "^5.0.0",
     "node-cleanup": "^2.1.2",
