@@ -12,7 +12,7 @@ var port = tlf + audio_queue;
 
 module.exports = {
   port: port,
-  version: "1.0.0",
+  version: pquire("../package.json").version,
   bonjour: {
     name: "TLF Audio Queue",
     type: "tlf-music-queue"
