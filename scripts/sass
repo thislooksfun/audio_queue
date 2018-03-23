@@ -1,4 +1,4 @@
 #!/bin/bash
 
-
-node-sass --include-path -r src/server/web/sass -o src/server/web/public/css
+cd web
+sass --watch sass/:public/css/

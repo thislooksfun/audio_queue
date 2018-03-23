@@ -18,7 +18,7 @@ body {
   grid-row: middle-start; }
   .center_block h1 {
     font-size: 50px; }
-  .center_block span {
+  .center_block label {
     font-size: 17px; }
   .center_block input[type=text] {
     display: block;
@@ -36,7 +36,7 @@ body {
     line-height: 30px;
     transition: border-color 0.15s ease; }
     .center_block input[type=text]:focus {
-      border-color: #2C75FF;
+      border-color: #31a3f3;
       outline-width: 0;
       outline: none; }
 
