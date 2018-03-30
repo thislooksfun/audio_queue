@@ -4,7 +4,6 @@
 const fs   = require("fs-extra");
 const path = require("path");
 // Local imports
-const log  = pquire("log");
 const misc = pquire("misc");
 
 const requiredKeys = {

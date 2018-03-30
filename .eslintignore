@@ -1,6 +1,7 @@
 .git/
 .nyc_output/
 coverage/
+ffdev/
 firefoxExtension/
 node_modules/
 web/public/js/jquery-3.3.1.min.js

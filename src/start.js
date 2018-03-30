@@ -1,13 +1,13 @@
 "use strict";
 
-// Make pquire global
+// Make pquire and log global
 global.pquire = require("pquire").withBaseRelative("./");
+global.log = require("tlf-log");
 
 // Parse command line opts (doesn't need to be called, just referencing it is enough);
 pquire("cmdLineArgs");
 
 // Local imports
-const log       = pquire("helper/log");
 const {version} = pquire("settings");
 
 

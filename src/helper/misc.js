@@ -2,8 +2,6 @@
 
 // Global imports
 const path = require("path");
-// Local imports
-const log = pquire("log");
 
 module.exports = {
   projectRoot: path.join(__dirname, "../../"),

@@ -2,7 +2,6 @@
 
 // Local imports
 const {sleep} = pquire("helper/misc");
-const log     = pquire("helper/log");
 const init    = pquire("init");
 const run     = pquire("run");
 

@@ -1,7 +1,6 @@
 "use strict";
 
 // Local imports
-const log      = pquire("helper/log");
 const services = pquire("helper/services");
 
 // The actual init function

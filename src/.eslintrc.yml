@@ -1,3 +1,4 @@
 extends: '../.eslintrc.yml'
 globals:
   pquire: false
+  log: false

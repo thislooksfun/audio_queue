@@ -5,7 +5,6 @@ const path        = require("path");
 const express     = require("express");
 const bodyParser  = require("body-parser");
 // Local imports
-const log           = pquire("helper/log");
 const {projectRoot} = pquire("helper/misc");
 const {port}        = pquire("settings");
 

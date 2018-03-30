@@ -4,7 +4,6 @@
 const fs = require("fs-extra");
 const path = require("path");
 // Local imports
-const log           = pquire("log");
 const manifest      = pquire("manifest");
 const {projectRoot} = pquire("misc");
 

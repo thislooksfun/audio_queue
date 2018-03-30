@@ -1,7 +1,5 @@
 "use strict";
 
-const log = pquire("helper/log");
-
 // Set up the options
 const optionDefinitions = [
   {
@@ -61,12 +59,15 @@ if (opts.main.help) {  // Display help and exit.
   
   if (opts.debug.debug) {
     settings.debug = true;
+    // Override 'log-level' and 'headed' flags
     opts.main["log-level"] = "debug";
     opts.debug.headed = true;
   }
   
   // Set log level (does error checking itself);
-  log._setLevel(opts.main["log-level"]);
+  if (opts.main["log-level"] !== undefined) {
+    log._setLevel(opts.main["log-level"]);
+  }
   
   if (opts.debug.headed) {
     settings.headless = false;

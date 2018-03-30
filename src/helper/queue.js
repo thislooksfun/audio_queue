@@ -1,7 +1,6 @@
 "use strict";
 
 // Local imports
-const log      = pquire("log");
 const drivers  = pquire("drivers");
 const services = pquire("services");
 

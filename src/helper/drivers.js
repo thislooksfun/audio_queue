@@ -6,7 +6,6 @@ const fs        = require("fs-extra");
 const webdriver = require("selenium-webdriver");
 const firefox   = require("selenium-webdriver/firefox");
 // Local imports
-const log           = pquire("helper/log");
 const {projectRoot} = pquire("misc");
 const {headless}    = pquire("settings");
 

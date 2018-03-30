@@ -1,7 +1,6 @@
 "use strict";
 
 // Local imports
-const log   = pquire("helper/log");
 const queue = pquire("helper/queue");
 
 module.exports = {
