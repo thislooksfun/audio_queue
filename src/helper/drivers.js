@@ -9,6 +9,10 @@ const firefox   = require("selenium-webdriver/firefox");
 const {projectRoot} = pquire("misc");
 const {headless}    = pquire("settings");
 
+// Add to the PATH
+log.debug("Adding './bin' to path");
+process.env.PATH += ":" + path.join(process.cwd(), "bin");
+
 // Get the Firefox binary path
 const ffBinary = fs.readFileSync(path.join(projectRoot, "ff_bin_path.txt"), "utf-8");
 
