@@ -4,15 +4,12 @@
   "description": "STUFF",
   "scripts": {
     "postinstall": "node ./scripts/postinstall.js",
-    
     "lint": "eslint .",
     "snyk_test": "snyk test",
     "test": "nyc mocha $(find test -name '*.test.js')",
     "check_coverage": "nyc check-coverage --lines 100 --functions 100 --branches 100 --per-file",
-    
     "snyk_monitor": "snyk monitor",
     "upload_coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    
     "start": "node src/start.js",
     "sass": "./scripts/sass",
     "http_coverage": "nyc report --reporter=html"
@@ -26,6 +23,7 @@
     "command-line-usage": "^5.0.3",
     "express": "^4.16.3",
     "fs-extra": "^5.0.0",
+    "ip": "^1.1.5",
     "node-cleanup": "^2.1.2",
     "pquire": "^1.1.0",
     "request": "^2.85.0",

@@ -1,6 +1,7 @@
 "use strict";
 
 // Global imports
+const ip          = require("ip");
 const path        = require("path");
 const express     = require("express");
 const bodyParser  = require("body-parser");
@@ -33,7 +34,7 @@ module.exports = {
       // Start server
       log.trace(" > Starting server");
       app.listen(port);
-      log.info(`Server started on port ${port}`);
+      log.info(`Server started at ${ip.address()}:${port}`);
       
       // Advertise on Bonjour
       bonjour.publish();
