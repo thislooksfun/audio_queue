@@ -28,7 +28,7 @@
     "pquire": "^1.1.0",
     "request": "^2.85.0",
     "selenium-webdriver": "^3.6.0",
-    "tlf-log": "^1.0.1"
+    "tlf-log": "^1.2.0"
   },
   "devDependencies": {
     "bourbon": "^5.0.0",
