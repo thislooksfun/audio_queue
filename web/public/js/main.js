@@ -17,7 +17,7 @@ $(function() {
   
   $("#youtubeID").keypress(function(e) {
     if(e.which == 13 && this.value.length > 0) {
-      $.postJSON("/api/queue", {id: this.value}, function() {
+      $.postJSON("/api/v1/queue", {id: this.value}, function() {
         $("#youtubeID")[0].value = "";
       });
     }
