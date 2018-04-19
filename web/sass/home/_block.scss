@@ -40,6 +40,13 @@
   }
 }
 
+#search_results {
+  // text-align: center;
+  
+  grid-column: main-start;
+  grid-row: bottom-start;
+}
+
 @media screen and (min-width: $width-wide-start) {
   .center_block {
     input[type=text] {

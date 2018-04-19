@@ -31,7 +31,13 @@ $(function() {
           return;
         }
         
+        console.dir(res);
         console.log(res.data);
+        $.each(res.data, function(i, d) {
+          let sp = $("<li>");
+          sp.text("(" + d.serviceName + ") " + d.title);
+          $("#search_results").append(sp);
+        });
       });
     }
   });

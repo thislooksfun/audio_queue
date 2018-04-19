@@ -40,6 +40,10 @@ body {
       outline-width: 0;
       outline: none; }
 
+#search_results {
+  grid-column: main-start;
+  grid-row: bottom-start; }
+
 @media screen and (min-width: 400px) {
   .center_block input[type=text] {
     width: 260px; } }
