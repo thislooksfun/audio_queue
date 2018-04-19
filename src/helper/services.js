@@ -22,7 +22,7 @@ module.exports = {
     for (var s of fs.readdirSync(servicesPath)) {
       var mnfst = manifest.parse(servicesPath, s, ffExtPath);
       if (mnfst != null) {
-        services[mnfst.name] = {prep: mnfst.prep, play: mnfst.play};
+        services[mnfst.name] = {prep: mnfst.prep, play: mnfst.play, search: mnfst.search};
         
         // TODO: Process the extension script stuff in helper/manifest.js
         if (mnfst.extension != null) {
@@ -39,5 +39,21 @@ module.exports = {
     var s = services[name];
     if (s == null) log.fatal(`Tried to get unregisterd service by name '${name}'`);
     return s;
+  },
+  
+  async search(query) {
+    var results = [];
+    
+    for (var name in services) {
+      let s = services[name];
+      let res = await s.search(query);
+      for (var r of res) {
+        r.serviceName = name;
+      }
+      
+      results.push(res);
+    }
+    
+    return results;
   }
 };
