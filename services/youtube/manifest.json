@@ -7,7 +7,8 @@
   "icon": "??",
   "scripts": {
     "prep": "src/prep.js",
-    "play": "src/play.js"
+    "play": "src/play.js",
+    "search": "src/search.js"
   },
   "extension": {
     "matches": ["*://www.youtube.com/watch?v=*"],
