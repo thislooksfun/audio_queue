@@ -13,7 +13,7 @@ module.exports = {
       res.json({success: true});
     });
     
-    app.post("/api/v1/search", async function(req, res) {
+    app.get("/api/v1/search", async function(req, res) {
       let data = await services.search(req.query.q);
       res.json({success: true, data: data});
     });
