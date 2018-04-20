@@ -38,7 +38,8 @@ $(function() {
         
         clearSearchResults(false);
         $.each(res.data, addSearchResult);
-      }).fail(function(jqXHR, textStatus, errorThrown) {
+      // }).fail(function(jqXHR, textStatus, errorThrown) {
+      }).fail(function() {
         console.dir(arguments);
       });
     }
@@ -86,7 +87,8 @@ $(function() {
       addQueueItem(-2, res.data.playing);
       addQueueItem(-1, res.data.prepping);
       $.each(res.data.queue, addQueueItem);
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    // }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function() {
       console.dir(arguments);
     });
   }
