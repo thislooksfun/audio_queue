@@ -2,7 +2,7 @@
 jQuery.postJSON = function(url,data,callback) {
   "use strict";
   
-  jQuery.ajax({
+  return jQuery.ajax({
     url:url,
     type:"POST",
     data:JSON.stringify(data),
@@ -25,6 +25,8 @@ $(function() {
   
   $("#search").keypress(function(e) {
     if(e.which == 13 && this.value.length > 0) {
+      clearSearchResults(true);
+      
       $.getJSON("/api/v1/search", {q: this.value}, function(res) {
         if (!res.success) {
           console.error(res.error);
@@ -33,12 +35,38 @@ $(function() {
         
         console.dir(res);
         console.log(res.data);
-        $.each(res.data, function(i, d) {
-          let sp = $("<li>");
-          sp.text("(" + d.serviceName + ") " + d.title);
-          $("#search_results").append(sp);
-        });
+        
+        clearSearchResults(false);
+        $.each(res.data, addSearchResult);
+      }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.dir(arguments);
       });
     }
   });
+  
+  function clearSearchResults(showSpinner) {
+    $("#search_results").html("");
+    if (showSpinner) {
+      // TODO
+    }
+  }
+  
+  function addSearchResult(index, item) {
+    let button = $("<button>");
+    button.text("+");
+    button.click(function() {
+      $.postJSON("/api/v1/queue", {serviceName: item.serviceName, id: item.id}, function(err, msg) {
+        console.log(err, msg);
+      }).fail(function(jqXHR) {
+        console.error(jqXHR.responseJSON.error);
+      });
+    });
+    
+    let sp = $("<span>");
+    sp.text("(" + item.serviceName + ") " + item.title);
+    
+    let li = $("<li>");
+    li.append(button, sp);
+    $("#search_results").append(li);
+  }
 });
