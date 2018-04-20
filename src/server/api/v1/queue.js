@@ -14,9 +14,6 @@ module.exports = {
         prepping: queue.prepping,
         queue: queue.list,
       };
-      console.log(data.playing);
-      console.log(data.prepping);
-      console.log(data.queue);
       res.json({success: true, data: data});
     });
     
