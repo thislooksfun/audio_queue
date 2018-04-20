@@ -4,7 +4,7 @@
 const drivers  = pquire("drivers");
 const services = pquire("services");
 
-// Item format: {serviceName: string, id: string, name: string, length: number}
+// Item format: {serviceName: string, id: string, title: string, length: number}
 var queue = [];
 
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
   next: null,
   
   async add(i) {
-    log.trace(`Adding item ${i.name} to the queue`);
+    log.trace(`Adding item ${i.title} to the queue`);
     log.debug(i);
     queue.push(i);
     if (queue.length === 1 && this.next === null) {
@@ -33,5 +33,8 @@ module.exports = {
     this.next.ready = true;
   },
   
+  get playing() { return (this.current == null) ? null : this.current.item; },
+  get prepping() { return (this.next == null) ? null : this.next.item; },
+  get list() { return queue; },
   get empty() { return queue.length === 0; },
 };

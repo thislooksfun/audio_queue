@@ -14,8 +14,8 @@ body {
 
 .center_block {
   text-align: center;
-  grid-column: main-start;
-  grid-row: middle-start; }
+  grid-column: search-start;
+  grid-row: upper-start; }
   .center_block h1 {
     font-size: 50px; }
   .center_block label {
@@ -41,8 +41,12 @@ body {
       outline: none; }
 
 #search_results {
-  grid-column: main-start;
-  grid-row: bottom-start; }
+  grid-column: search-start;
+  grid-row: lower-start; }
+
+#queue {
+  grid-column: queue-start;
+  grid-row: upper-start/lower-end; }
 
 @media screen and (min-width: 400px) {
   .center_block input[type=text] {
@@ -54,12 +58,12 @@ body {
   top: 0;
   left: 0;
   display: grid;
-  grid-template-columns: [left-start] 0 [main-start] 100% [right-start] 0 [right-end];
-  grid-template-rows: [top-start] auto [middle-start] auto [bottom-start] auto [bottom-end]; }
+  grid-template-columns: [search-start] 0 [queue-start] 100% [queue-end];
+  grid-template-rows: [upper-start] auto [lower-start] auto [lower-end]; }
 
 @media screen and (min-width: 400px) {
   #main {
-    grid-template-columns: [left-start] 25% [main-start] 50% [right-start] 25% [right-end];
-    grid-template-rows: [top-start] auto [middle-start] auto [bottom-start] auto [bottom-end]; } }
+    grid-template-columns: [search-start] 50% [queue-start] 50% [queue-end];
+    grid-template-rows: [upper-start] auto [lower-start] auto [lower-end]; } }
 
 /*# sourceMappingURL=home.css.map */

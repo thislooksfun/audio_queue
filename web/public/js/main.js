@@ -55,7 +55,7 @@ $(function() {
     let button = $("<button>");
     button.text("+");
     button.click(function() {
-      $.postJSON("/api/v1/queue", {serviceName: item.serviceName, id: item.id}, function(err, msg) {
+      $.postJSON("/api/v1/queue", item, function(err, msg) {
         console.log(err, msg);
       }).fail(function(jqXHR) {
         console.error(jqXHR.responseJSON.error);
@@ -69,4 +69,59 @@ $(function() {
     li.append(button, sp);
     $("#search_results").append(li);
   }
+  
+  
+  
+  function updateQueue() {
+    $.getJSON("/api/v1/queue", function(res) {
+      if (!res.success) {
+        console.error(res.error);
+        return;
+      }
+      
+      // console.dir(res);
+      // console.log(res.data);
+      
+      clearQueue();
+      addQueueItem(-2, res.data.playing);
+      addQueueItem(-1, res.data.prepping);
+      $.each(res.data.queue, addQueueItem);
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+      console.dir(arguments);
+    });
+  }
+  
+  function clearQueue() {
+    $("#queue").html("");
+  }
+  
+  function addQueueItem(index, item) {
+    let sp = $("<span>");
+    console.log(item);
+    
+    if (index === -2) {
+      // Currently playing item
+      if (item == null) {
+        sp.text("Playing: nothing");
+      } else {
+        sp.text("Playing: (" + item.serviceName + ") " + item.title);
+      }
+    } else if (index === -1) {
+      // Prepping item
+      if (item == null) {
+        sp.text("Prepping: nothing");
+      } else {
+        sp.text("Prepping: (" + item.serviceName + ") " + item.title);
+      }
+    } else {
+      sp.text("(" + item.serviceName + ") " + item.title);
+    }
+    
+    let li = $("<li>");
+    li.append(sp);
+    $("#queue").append(li);
+  }
+  
+  // Update the queue every second.
+  setInterval(updateQueue, 1000);
 });

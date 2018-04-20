@@ -8,6 +8,18 @@ module.exports = {
   register(router) {
     log.trace("Setting up queue route");
     
+    router.get("/queue", function(req, res) {
+      let data = {
+        playing: queue.playing,
+        prepping: queue.prepping,
+        queue: queue.list,
+      };
+      console.log(data.playing);
+      console.log(data.prepping);
+      console.log(data.queue);
+      res.json({success: true, data: data});
+    });
+    
     router.post("/queue", function(req, res) {
       if (req.body == null) {
         return res.status(codes.bad_request).json({success: false, error: "Body must be a JSON object"});
@@ -19,8 +31,8 @@ module.exports = {
         return res.status(codes.bad_request).json({success: false, error: "id must be a non-empty string"});
       }
       
-      // TODO: Get name and length from id, not from client.
-      queue.add({serviceName: req.body.serviceName, id: req.body.id, name: "????", length: 4});
+      // TODO: Get title and length from id, not from client.
+      queue.add({serviceName: req.body.serviceName, id: req.body.id, title: req.body.title, length: 4});
       res.json({success: true});
     });
   }

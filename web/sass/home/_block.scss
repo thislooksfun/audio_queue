@@ -1,8 +1,8 @@
 .center_block {
   text-align: center;
   
-  grid-column: main-start;
-  grid-row: middle-start;
+  grid-column: search-start;
+  grid-row: upper-start;
   
   h1 {
     font-size: 50px;
@@ -43,8 +43,15 @@
 #search_results {
   // text-align: center;
   
-  grid-column: main-start;
-  grid-row: bottom-start;
+  grid-column: search-start;
+  grid-row: lower-start;
+}
+
+#queue {
+  // text-align: center;
+  
+  grid-column: queue-start;
+  grid-row: upper-start/lower-end;
 }
 
 @media screen and (min-width: $width-wide-start) {
