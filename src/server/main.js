@@ -12,7 +12,6 @@ const {port}        = pquire("settings");
 // Server phases
 const frontend = pquire("frontend");
 const bonjour  = pquire("bonjour");
-const apiv1    = pquire("api/v1");
 
 const webRoot = path.join(projectRoot, "web");
 
@@ -20,6 +19,7 @@ module.exports = {
   async start() {
     try {
       log.info("Starting server...");
+      log._prefix(" > ");
       
       // Configure app
       let app = express();
@@ -29,10 +29,20 @@ module.exports = {
       
       // Register endpoints
       frontend.register(app, webRoot);
-      apiv1.register(app, webRoot);
+      
+      // Register API v1
+      log.trace("Setting up search route (v1)");
+      
+      var apiV1Router = express.Router();
+      log._prefix("(v1) ");
+      pquire.each("api/v1", (p) => p.register(apiV1Router, webRoot));
+      app.use("/api/v1", apiV1Router);
+      log._deprefix();
       
       // Start server
-      log.trace(" > Starting server");
+      log.trace("Starting server");
+      log._deprefix();
+      
       app.listen(port);
       log.info(`Server started at ${ip.address()}:${port}`);
       
