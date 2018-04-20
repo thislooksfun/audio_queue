@@ -11,7 +11,8 @@ const {projectRoot} = pquire("misc");
 var services = {};
 
 module.exports = {
-  load: async function() {
+  // If this is made async, then where it is called in 'init.js' needs to be changed to 'await'
+  load: function() {
     var ffExtPath = path.join(projectRoot, "firefoxExtension");
     var ffExtManPath = path.join(ffExtPath, "manifest.json");
     fs.removeSync(ffExtPath);
@@ -20,7 +21,10 @@ module.exports = {
     
     // Load services
     var servicesPath = path.join(projectRoot, "services");
+    log.debug("Loading all services from path '" + servicesPath + "'");
+    log._indent();
     for (var s of fs.readdirSync(servicesPath)) {
+      log.debug("Loading service '" + s + "'");
       var mnfst = manifest.parse(servicesPath, s, ffExtPath);
       if (mnfst != null) {
         services[mnfst.name] = {prep: mnfst.prep, play: mnfst.play, search: mnfst.search};
@@ -31,6 +35,7 @@ module.exports = {
         }
       }
     }
+    log._deindent();
     
     fs.writeFileSync(ffExtManPath, JSON.stringify(ffExtManifest, null, 2));
     return services;
