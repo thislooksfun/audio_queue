@@ -23,12 +23,15 @@
     "command-line-usage": "^5.0.3",
     "express": "^4.16.3",
     "fs-extra": "^5.0.0",
+    "gunzip-maybe": "^1.4.1",
     "ip": "^1.1.5",
     "node-cleanup": "^2.1.2",
     "pquire": "^1.2.0",
     "request": "^2.85.0",
     "selenium-webdriver": "^3.6.0",
+    "tar-fs": "^1.16.0",
     "tlf-log": "^1.2.0",
+    "unbzip2-stream": "^1.2.5",
     "youtube-api": "^2.0.9"
   },
   "devDependencies": {

@@ -1,9 +1,15 @@
 "use strict";
 
 const fs       = require("fs-extra");
+const tar      = require("tar-fs");
+const bz2      = require("unbzip2-stream");
 const path     = require("path");
+const gunzip   = require("gunzip-maybe");
 const request  = require("request");
 const execSync = require("child_process").execSync;
+
+const geckodriverVersion = "v0.20.1";
+const geckoDriverURLPrefix = "https://github.com/mozilla/geckodriver/releases/download/" + geckodriverVersion + "/";
 
 function download(url, filename) {
   return new Promise(function(resolve) {
@@ -11,19 +17,39 @@ function download(url, filename) {
   });
 }
 
+function arch() {
+  switch (process.arch) {
+    case "x64": return 64;
+    default: {
+      console.error(`ERROR: Unsupported architecture ${process.arch}. Please open an issue at https://github.com/thislooksfun/audio_queue`);
+      process.exit(1);
+    }
+  }
+}
+
 (async function() {
   try {
-    fs.mkdirpSync("tmp");
-    
-    var binPath;
-    
     // If the app already exists, don't bother.
     if (fs.existsSync("ffdev")) return;
     
+    fs.mkdirpSync("tmp");
+    var binPath;
+    var geckoPlatform;
+    
     switch (process.platform) {
       case "darwin": {
-        // macOS
+        /*
+        ███    ███  █████   ██████  ██████  ███████
+        ████  ████ ██   ██ ██      ██    ██ ██
+        ██ ████ ██ ███████ ██      ██    ██ ███████
+        ██  ██  ██ ██   ██ ██      ██    ██      ██
+        ██      ██ ██   ██  ██████  ██████  ███████
+        */
         
+        geckoPlatform = "macos";
+        
+        
+        // Install Firefox Developer Edition
         console.log("Downloading Firefox Developer Edition...");
         await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=osx&lang=en-US", "tmp/ffdev.dmg");
         console.log("Mounting disk image...");
@@ -38,20 +64,59 @@ function download(url, filename) {
         break;
       }
       // case "win32": {
-      //   // Windows
+      //  /*
+      //  ██     ██ ██ ███    ██ ██████   ██████  ██     ██ ███████
+      //  ██     ██ ██ ████   ██ ██   ██ ██    ██ ██     ██ ██
+      //  ██  █  ██ ██ ██ ██  ██ ██   ██ ██    ██ ██  █  ██ ███████
+      //  ██ ███ ██ ██ ██  ██ ██ ██   ██ ██    ██ ██ ███ ██      ██
+      //   ███ ███  ██ ██   ████ ██████   ██████   ███ ███  ███████
+      //  */
+      //
+      //   geckoPlatform = "win" + arch();
+      //
+      //
       //   break;
       // }
-      // case "linux": {
-      //   // linux
-      //   break;
-      // }
-      default:
+      case "linux": {
+        /*
+        ██      ██ ███    ██ ██    ██ ██   ██
+        ██      ██ ████   ██ ██    ██  ██ ██
+        ██      ██ ██ ██  ██ ██    ██   ███
+        ██      ██ ██  ██ ██ ██    ██  ██ ██
+        ███████ ██ ██   ████  ██████  ██   ██
+        */
+        
+        geckoPlatform = "linux" + arch();
+        
+        
+        // Install Firefox Developer Edition
+        console.log("Downloading Firefox Developer Edition...");
+        
+        await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=" + geckoPlatform + "&lang=en-US", "tmp/ffdev.tar.bz2");
+        console.log("Decompressing...");
+        fs.createReadStream("tmp/ffdev.tar.bz2").pipe(bz2()).pipe(tar.extract("./ffdev"));
+        binPath = path.join(process.cwd(), "ffdev/firefox-bin");
+        break;
+      }
+      default: {
         console.error(`ERROR: Unsupported platform ${process.platform}. Please open an issue at https://github.com/thislooksfun/audio_queue`);
         process.exit(1);
+      }
     }
     
+    
+    // Install geckodriver
+    console.log("Downloading geckodriver...");
+    let geckoZip = "geckodriver-" + geckodriverVersion + "-" + geckoPlatform + ".tar.gz";
+    await download(geckoDriverURLPrefix + geckoZip, "tmp/geckodriver.tar.gz");
+    console.log("Decompressing...");
+    fs.createReadStream("tmp/geckodriver.tar.gz").pipe(gunzip()).pipe(tar.extract("./bin"));
+    
+    
+    // Clean up
     console.log("Cleaning up...");
     fs.remove("tmp");
+    
     
     console.log("Writing ff_bin_path.txt...");
     fs.writeFileSync("ff_bin_path.txt", binPath);
