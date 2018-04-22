@@ -58,6 +58,7 @@ typings/
 .env
 
 # Generated files
+bin/
 ffdev/
 firefoxExtension/
 ff_bin_path.txt
