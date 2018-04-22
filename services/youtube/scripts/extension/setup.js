@@ -2,7 +2,9 @@
 
 var vid = document.querySelector("#player .html5-main-video");
 console.log(vid);
-vid.addEventListener("loadeddata", function() {
+
+function afterVidLoad() {
+  console.log("Video loaded");
   
   var wjo = window.wrappedJSObject;
 
@@ -32,4 +34,12 @@ vid.addEventListener("loadeddata", function() {
     }
   }, 50);
   
-});
+}
+
+if (vid.readyState === 0) {
+  // Video is not loaded, wait until it is
+  vid.addEventListener("loadeddata", afterVidLoad);
+} else {
+  // Video is already loaded, start setup
+  afterVidLoad();
+}
