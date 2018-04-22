@@ -14,8 +14,16 @@
     "sass": "./scripts/sass",
     "http_coverage": "nyc report --reporter=html"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thislooksfun/audio_queue.git"
+  },
   "author": "thislooksfun",
-  "license": "ISC",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/thislooksfun/audio_queue/issues"
+  },
+  "homepage": "https://github.com/thislooksfun/audio_queue#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
     "bonjour": "git+https://github.com/thislooksfun/bonjour.git#semver:^3.5.2",
