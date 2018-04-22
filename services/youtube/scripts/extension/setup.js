@@ -12,7 +12,7 @@ function afterVidLoad() {
   var ytp = wjo.tlf_YTPlayer;
 
   function selectorVisible(selector) {
-    let el = document.querySelector(selector);
+    var el = document.querySelector(selector);
     return el !== null && el.offsetParent !== null;
   }
 
