@@ -12,7 +12,8 @@ function afterVidLoad() {
   var ytp = wjo.tlf_YTPlayer;
 
   function selectorVisible(selector) {
-    return document.querySelector(selector).offsetParent !== null;
+    let el = document.querySelector(selector);
+    return el !== null && el.offsetParent !== null;
   }
 
   setInterval(function() {
