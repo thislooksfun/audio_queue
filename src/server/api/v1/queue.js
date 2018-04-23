@@ -3,6 +3,7 @@
 // Local imports
 const queue = pquire("helper/queue");
 const codes = pquire("server/codes/httpCodes");
+const services = pquire("helper/services");
 
 module.exports = {
   register(router) {
@@ -17,7 +18,7 @@ module.exports = {
       res.json({success: true, data: data});
     });
     
-    router.post("/queue", function(req, res) {
+    router.post("/queue", async function(req, res) {
       if (req.body == null) {
         return res.status(codes.bad_request).json({success: false, error: "Body must be a JSON object"});
       }
@@ -28,8 +29,10 @@ module.exports = {
         return res.status(codes.bad_request).json({success: false, error: "id must be a non-empty string"});
       }
       
-      // TODO: Get title and length from id, not from client.
-      queue.add({serviceName: req.body.serviceName, id: req.body.id, title: req.body.title, length: 4});
+      let item = await services.getService(req.body.serviceName).getInfo(req.body.id);
+      item.serviceName = req.body.serviceName;
+      
+      queue.add(item);
       res.json({success: true});
     });
   }

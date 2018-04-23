@@ -3,6 +3,8 @@
 // Global imports
 const yt = require("youtube-api");
 const qStr = require("querystring");
+// Local imports
+const info = require("./info");
 
 yt.authenticate({type:"key", key: require("../private/key.json").key});
 
@@ -16,6 +18,7 @@ async function search(query, maxResults) {
       order: "relevance"
     }, function(err, res) {
       if (err != null) {
+        console.log(err, res);
         throw new Error(err);
       }
       resolve(res);
@@ -23,20 +26,13 @@ async function search(query, maxResults) {
   });
 }
 
+
 module.exports = async function(query, maxResults = 10) {
-  let res = await search(query, maxResults);
+  let {items} = await search(query, maxResults);
   
-  var results = [];
-  for (let i of res.items) {
-    [{title: "oh my", id: "noclue", length: 1400000}];
-    
-    let obj = {
-      title: i.snippet.title,
-      id: i.id.videoId,
-      length: -1,
-    };
-    results.push(obj);
+  let infoPromises = [];
+  for (let i of items) {
+    infoPromises.push(info(i.id.videoId));
   }
-  
-  return results;
+  return await Promise.all(infoPromises);
 };

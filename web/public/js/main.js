@@ -99,7 +99,6 @@ $(function() {
   
   function addQueueItem(index, item) {
     let sp = $("<span>");
-    console.log(item);
     
     if (index === -2) {
       // Currently playing item

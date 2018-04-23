@@ -10,6 +10,24 @@ const {projectRoot} = pquire("misc");
 
 var services = {};
 
+function buildSearch(searchFn, name) {
+  return async function(query) {
+    let res = await searchFn(query);
+    for (var r of res) {
+      r.serviceName = name;
+    }
+    return res;
+  };
+}
+
+function buildGetInfo(infoFn, name) {
+  return async function(query) {
+    let res = await infoFn(query);
+    res.serviceName = name;
+    return res;
+  };
+}
+
 module.exports = {
   // If this is made async, then where it is called in 'init.js' needs to be changed to 'await'
   load: function() {
@@ -27,7 +45,9 @@ module.exports = {
       log.debug("Loading service '" + s + "'");
       var mnfst = manifest.parse(servicesPath, s, ffExtPath);
       if (mnfst != null) {
-        services[mnfst.name] = {prep: mnfst.prep, play: mnfst.play, search: mnfst.search};
+        let search = buildSearch(mnfst.search, mnfst.name);
+        let getInfo = buildGetInfo(mnfst.getInfo, mnfst.name);
+        services[mnfst.name] = {prep: mnfst.prep, play: mnfst.play, search: search, getInfo: getInfo};
         
         // TODO: Process the extension script stuff in helper/manifest.js
         if (mnfst.extension != null) {
@@ -43,7 +63,7 @@ module.exports = {
   
   getService(name) {
     var s = services[name];
-    if (s == null) log.fatal(`Tried to get unregisterd service by name '${name}'`);
+    if (s == null) log.fatal(`Tried to get unregistered service by name '${name}'`);
     return s;
   },
   
@@ -53,10 +73,6 @@ module.exports = {
     for (var name in services) {
       let s = services[name];
       let res = await s.search(query);
-      for (var r of res) {
-        r.serviceName = name;
-      }
-      
       results.push(res);
     }
     

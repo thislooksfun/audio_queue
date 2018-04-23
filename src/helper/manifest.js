@@ -16,7 +16,8 @@ const requiredKeys = {
   scripts: {
     prep: "string",
     play: "string",
-    search: "string"
+    search: "string",
+    info: "string"
   }
 };
 
@@ -57,6 +58,16 @@ function lerr(...msgs) {
   return null;
 }
 
+function loadScript(name, mnfst, servPath) {
+  if (path.isAbsolute(mnfst.scripts[name])) {
+    return lerr(`Error parsing manifest for '${mnfst.name}': ${name} script path must be relative`);
+  }
+  try {
+    return require(path.relative(__dirname, path.join(servPath, mnfst.scripts[name])));
+  } catch (e) {
+    return lerr(`Error loading ${name} script for module '${mnfst.name}':`, e);
+  }
+}
 
 module.exports = {
   parse: function(servicesPath, serviceFolder, ffExtPath) {
@@ -82,34 +93,10 @@ module.exports = {
       return null;  // Error message was aleady printed
     }
     
-    if (path.isAbsolute(mnfst.scripts.prep)) {
-      return lerr(`Error parsing manifest for '${mnfst.name}': Prep script path must be relative`);
-    }
-    
-    if (path.isAbsolute(mnfst.scripts.play)) {
-      return lerr(`Error parsing manifest for '${mnfst.name}': Play script path must be relative`);
-    }
-    
-    if (path.isAbsolute(mnfst.scripts.search)) {
-      return lerr(`Error parsing manifest for '${mnfst.name}': Search script path must be relative`);
-    }
-    
-    var prep, play, search;
-    try {
-      prep = require(path.relative(__dirname, path.join(servPath, mnfst.scripts.prep)));
-    } catch (e) {
-      return lerr(`Error loading prep script for module '${mnfst.name}':`, e);
-    }
-    try {
-      play = require(path.relative(__dirname, path.join(servPath, mnfst.scripts.play)));
-    } catch (e) {
-      return lerr(`Error loading play script for module '${mnfst.name}':`, e);
-    }
-    try {
-      search = require(path.relative(__dirname, path.join(servPath, mnfst.scripts.search)));
-    } catch (e) {
-      return lerr(`Error loading search script for module '${mnfst.name}':`, e);
-    }
+    let prep = loadScript("prep", mnfst, servPath);
+    let play = loadScript("play", mnfst, servPath);
+    let search = loadScript("search", mnfst, servPath);
+    let getInfo = loadScript("info", mnfst, servPath);
     
     var ffExtInfo;
     if (mnfst.extension != null) {
@@ -121,6 +108,6 @@ module.exports = {
       ffExtInfo = res.ff;
     }
     
-    return {raw: mnfst, name: mnfst.name, prep: prep, play: play, search: search, extension: ffExtInfo};
+    return {raw: mnfst, name: mnfst.name, prep: prep, play: play, search: search, getInfo: getInfo, extension: ffExtInfo};
   }
 };
