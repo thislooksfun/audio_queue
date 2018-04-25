@@ -15,5 +15,9 @@
     "matches": ["*://www.youtube.com/watch?v=*"],
     "js": ["scripts/extension/setup.js"],
     "run_at": "document_end"
+  },
+  "dependencies": {
+    "iso8601-duration": "^1.1.1",
+    "youtube-api": "^2.0.9"
   }
 }

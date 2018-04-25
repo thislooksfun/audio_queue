@@ -20,6 +20,9 @@ const {version} = pquire("settings");
   // Start 'er up!
   try {
     log.info(`Starting Audio Queue v${version}`);
+    await player.init();
+    await server.init();
+    
     var p = player.start();
     var s = server.start();
     

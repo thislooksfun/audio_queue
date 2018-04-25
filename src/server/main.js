@@ -16,19 +16,19 @@ const bonjour  = pquire("bonjour");
 const webRoot = path.join(projectRoot, "web");
 
 module.exports = {
-  async start() {
+  async init() {
     try {
-      log.info("Starting server...");
+      log.info("Initalizing server...");
       log._prefix(" > ");
       
       // Configure app
-      let app = express();
+      this.app = express();
       // app.set('views', path.join(webRoot, 'html'));
-      app.use("/static", express.static(path.join(webRoot, "public")));
-      app.use(bodyParser.json());
+      this.app.use("/static", express.static(path.join(webRoot, "public")));
+      this.app.use(bodyParser.json());
       
       // Register endpoints
-      frontend.register(app, webRoot);
+      frontend.register(this.app, webRoot);
       
       // Register API v1
       log.trace("Setting up search route (v1)");
@@ -36,14 +36,20 @@ module.exports = {
       var apiV1Router = express.Router();
       log._prefix("(v1) ");
       pquire.each("api/v1", (p) => p.register(apiV1Router, webRoot));
-      app.use("/api/v1", apiV1Router);
+      this.app.use("/api/v1", apiV1Router);
       log._deprefix();
-      
+    } catch (e) {
+      log.fatal(e);
+    }
+  },
+  
+  async start() {
+    try {
       // Start server
       log.trace("Starting server");
       log._deprefix();
       
-      app.listen(port);
+      this.app.listen(port);
       log.info(`Server started at ${ip.address()}:${port}`);
       
       // Advertise on Bonjour

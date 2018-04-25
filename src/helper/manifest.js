@@ -3,6 +3,8 @@
 // Global imports
 const fs   = require("fs-extra");
 const path = require("path");
+const {exec} = require("child_process");
+
 // Local imports
 const misc = pquire("misc");
 
@@ -58,6 +60,30 @@ function lerr(...msgs) {
   return null;
 }
 
+async function installDep(name, version) {
+  return new Promise(function(resolve, reject) {
+    log.trace(`Installing ${name}@${version}...`);
+    exec(`npm install ${name}@${version}`, function(err) {
+      if (err != null) {
+        reject(err);
+      } else {
+        log.trace("Done");
+        resolve();
+      }
+    });
+  });
+}
+
+async function installDeps(mnfst) {
+  log.info(`Install dependencies for ${mnfst.name}...`);
+  log._indent();
+  for (let name in mnfst.dependencies) {
+    let version = mnfst.dependencies[name];
+    await installDep(name, version);
+  }
+  log._deindent();
+}
+
 function loadScript(name, mnfst, servPath) {
   if (path.isAbsolute(mnfst.scripts[name])) {
     return lerr(`Error parsing manifest for '${mnfst.name}': ${name} script path must be relative`);
@@ -70,7 +96,7 @@ function loadScript(name, mnfst, servPath) {
 }
 
 module.exports = {
-  parse: function(servicesPath, serviceFolder, ffExtPath) {
+  parse: async function(servicesPath, serviceFolder, ffExtPath) {
     var servPath = path.join(servicesPath, serviceFolder);
     var manPath = path.join(servPath, "manifest.json");
     log.debug(` > Parsing manifest ${manPath}`);
@@ -91,6 +117,10 @@ module.exports = {
     
     if (!misc.verifyKeys(serviceFolder, mnfst, requiredKeys)) {
       return null;  // Error message was aleady printed
+    }
+    
+    if (mnfst.dependencies != null) {
+      await installDeps(mnfst);
     }
     
     let prep = loadScript("prep", mnfst, servPath);

@@ -30,7 +30,7 @@ function buildGetInfo(infoFn, name) {
 
 module.exports = {
   // If this is made async, then where it is called in 'init.js' needs to be changed to 'await'
-  load: function() {
+  load: async function() {
     var ffExtPath = path.join(projectRoot, "firefoxExtension");
     var ffExtManPath = path.join(ffExtPath, "manifest.json");
     fs.removeSync(ffExtPath);
@@ -43,7 +43,7 @@ module.exports = {
     log._indent();
     for (var s of fs.readdirSync(servicesPath)) {
       log.debug("Loading service '" + s + "'");
-      var mnfst = manifest.parse(servicesPath, s, ffExtPath);
+      var mnfst = await manifest.parse(servicesPath, s, ffExtPath);
       if (mnfst != null) {
         let search = buildSearch(mnfst.search, mnfst.name);
         let getInfo = buildGetInfo(mnfst.getInfo, mnfst.name);

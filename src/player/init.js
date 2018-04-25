@@ -11,7 +11,6 @@ module.exports = async function() {
   
   log.debug("Loading services...");
   log._indent();
-  services.load();
-  // await services.load();
+  await services.load();
   log._deindent();
 };
