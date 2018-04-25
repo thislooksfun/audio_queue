@@ -10,18 +10,20 @@ const settings = pquire("settings");
 nodeCleanup(function (exitCode) {
   // If there are any bonjour services open, unpublish them and then exit
   log.trace("Cleaning up...");
+  log._prefix(" > ");
   if (bonjour._registry._services.length > 0) {
-    log.trace(" > Unpublishing Bonjour service");
+    log.trace("Unpublishing Bonjour service");
     bonjour.unpublishAll(() => {process.exit(exitCode);});
     return false;
   } else {
-    log.trace(" > Bonjour service unpublished, exiting...");
+    log.trace("Bonjour service unpublished, exiting...");
   }
+  log._deprefix();
 });
 
 module.exports = {
   publish() {
-    log.trace(" > Publishing Bonjour service");
+    log.trace("Publishing Bonjour service");
     bonjour.publish({
       name: settings.bonjour.name,
       type: settings.bonjour.type,

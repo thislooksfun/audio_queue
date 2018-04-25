@@ -38,6 +38,7 @@ module.exports = {
       pquire.each("api/v1", (p) => p.register(apiV1Router, webRoot));
       this.app.use("/api/v1", apiV1Router);
       log._deprefix();
+      log._deprefix();
     } catch (e) {
       log.fatal(e);
     }
@@ -46,14 +47,15 @@ module.exports = {
   async start() {
     try {
       // Start server
-      log.trace("Starting server");
-      log._deprefix();
+      log.info("Starting server...");
+      log._prefix(" > ");
       
       this.app.listen(port);
       log.info(`Server started at ${ip.address()}:${port}`);
       
       // Advertise on Bonjour
       bonjour.publish();
+      log._deprefix();
     } catch (e) {
       log.fatal(e);
     }

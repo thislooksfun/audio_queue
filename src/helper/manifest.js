@@ -61,8 +61,9 @@ function lerr(...msgs) {
 }
 
 async function installDep(name, version) {
+  // TODO: Check if dep is already installed, and error if version is different
   return new Promise(function(resolve, reject) {
-    log.trace(`Installing ${name}@${version}...`);
+    log.trace_(`Installing ${name}@${version}... `);
     exec(`npm install ${name}@${version}`, function(err) {
       if (err != null) {
         reject(err);
@@ -75,7 +76,7 @@ async function installDep(name, version) {
 }
 
 async function installDeps(mnfst) {
-  log.info(`Install dependencies for ${mnfst.name}...`);
+  log.info(`Installing dependencies for ${mnfst.name}...`);
   log._indent();
   for (let name in mnfst.dependencies) {
     let version = mnfst.dependencies[name];

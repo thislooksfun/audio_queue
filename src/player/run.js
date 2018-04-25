@@ -8,6 +8,7 @@ const unmuteScript = "window.postMessage({tlf_audio_queue_mute_signal: false}, '
 
 module.exports = async function() {
   try {
+    log.info("Player started");
     while (true) {
       var play;
       
