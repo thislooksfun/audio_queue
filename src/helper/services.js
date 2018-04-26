@@ -62,13 +62,13 @@ module.exports = {
     }
     log._deindent();
     
-    let removed = Object.keys(services).filter((el) => foundNames[el]);
+    let removed = Object.keys(services).filter((el) => foundNames[el] == null);
     if (removed.length > 0) {
       log.debug(`Removing ${removed.length} deleted services...`);
       log._prefix(" > ");
       for (let n of removed) {
         log.debug(`Removing service ${n}...`);
-        for (let p of services[n].mnfst._reqPaths) {
+        for (let p of services[n].manifest._reqPaths) {
           delete require.cache[p];
         }
         delete services[n];
