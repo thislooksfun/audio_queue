@@ -27,13 +27,12 @@ module.exports = async function() {
       }
       
       if (queue.next == null) {
-        queue.current = null;
+        queue.finishCurrent();
         if (queue.empty) {
           await sleep(1000);
         }
       } else if (queue.next.ready) {
-        queue.current = queue.next;
-        queue.next = null;
+        queue.shift();
       } else {
         await sleep(1000);
       }

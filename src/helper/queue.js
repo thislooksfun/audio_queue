@@ -33,6 +33,15 @@ module.exports = {
     this.next.ready = true;
   },
   
+  finishCurrent() {
+    this.current = null;
+  },
+  
+  shift() {
+    queue.current = queue.next;
+    queue.next = null;
+  },
+  
   get playing() { return (this.current == null) ? null : this.current.item; },
   get prepping() { return (this.next == null) ? null : this.next.item; },
   get list() { return queue; },
