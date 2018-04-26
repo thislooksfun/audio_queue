@@ -43,6 +43,11 @@ module.exports = {
     let foundNames = {};
     for (let s of fs.readdirSync(servicesPath)) {
       log.debug("Loading service '" + s + "'");
+      // TODO: More intellegent package dependency parsing
+      // Perhaps have `manifest.js` just parse the deps needed,
+      // then aggrigate together and install the missing ones at the end,
+      // instead of partway through as they currently are.
+      //   * See site (ALPHA) for potential placement
       let mnfst = await manifest.parse(servicesPath, s, ffExtPath);
       if (mnfst != null) {
         foundNames[mnfst.name] = true;
@@ -75,6 +80,12 @@ module.exports = {
       }
       log._deprefix();
     }
+    
+    // TODO: (ALPHA) [See above for more info]
+    // This is the place where dependency installation should take place.
+    // Uninstall (and unrequire) all current packages that are no longer needed,
+    // then install any missing ones
+    // This is then also the place to check for version conflicts.
     
     fs.writeFileSync(ffExtManPath, JSON.stringify(ffExtManifest, null, 2));
     return services;
