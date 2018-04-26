@@ -64,7 +64,11 @@ async function installDep(name, version) {
   // TODO: Check if dep is already installed, and error if version is different
   return new Promise(function(resolve, reject) {
     log.trace_(`Installing ${name}@${version}... `);
-    exec(`npm install ${name}@${version}`, function(err) {
+    var cmd = `npm install ${name}@${version}`;
+    if (/^win/.test(process.platform)) {  // If windows, ...
+      cmd = `${process.env.comspec} /c ${cmd}`;
+    }
+    exec(cmd, function(err) {
       if (err != null) {
         reject(err);
       } else {
