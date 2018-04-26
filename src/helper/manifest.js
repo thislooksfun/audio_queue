@@ -90,7 +90,10 @@ function loadScript(name, mnfst, servPath) {
     return lerr(`Error parsing manifest for '${mnfst.name}': ${name} script path must be relative`);
   }
   try {
-    return require(path.relative(__dirname, path.join(servPath, mnfst.scripts[name])));
+    let pth = require.resolve(path.relative(__dirname, path.join(servPath, mnfst.scripts[name])));
+    let mod = require(pth);
+    mnfst._reqPaths.push(pth);
+    return mod;
   } catch (e) {
     return lerr(`Error loading ${name} script for module '${mnfst.name}':`, e);
   }
@@ -115,6 +118,9 @@ module.exports = {
     if (mnfst == null) {
       return lerr(`Error loading manifest for service '${serviceFolder}': mnfst is null or undefined (This should never happen. If it does, please report it at https://github.com/thislooksfun/audio_queue and include the manifest.json used)`);
     }
+    
+    // Store for later use when uninstalling
+    mnfst._reqPaths = [require.resolve(manPath)];
     
     if (!misc.verifyKeys(serviceFolder, mnfst, requiredKeys)) {
       return null;  // Error message was aleady printed
