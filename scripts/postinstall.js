@@ -24,7 +24,7 @@ function arch() {
     default: {
       console.error(`ERROR: Unsupported architecture ${process.arch}. Please open an issue at https://github.com/thislooksfun/audio_queue`);
       // process.exit(1);
-      return 32;
+      return "";
     }
   }
 }
