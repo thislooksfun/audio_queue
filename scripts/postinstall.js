@@ -24,7 +24,7 @@ function arch() {
     default: {
       console.error(`ERROR: Unsupported architecture ${process.arch}. Please open an issue at https://github.com/thislooksfun/audio_queue`);
       // process.exit(1);
-      return "";
+      return 32;
     }
   }
 }
@@ -91,9 +91,11 @@ function arch() {
         geckoPlatform = "linux" + arch();
         
         
+        
         // Install Firefox Developer Edition
         console.log("Downloading Firefox Developer Edition...");
         
+        let osName = "linux" + (arch() === 32 ? "" : "64");
         await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=" + geckoPlatform + "&lang=en-US", "tmp/ffdev.tar.bz2");
         console.log("Decompressing...");
         fs.createReadStream("tmp/ffdev.tar.bz2").pipe(bz2()).pipe(tar.extract("./ffdev"));
