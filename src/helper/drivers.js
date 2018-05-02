@@ -10,8 +10,9 @@ const {projectRoot} = pquire("misc");
 const {headless}    = pquire("settings");
 
 // Add to the PATH
-log.debug("Adding './bin' to path");
+log.trace("Adding './bin' to path");
 process.env.PATH += ":" + path.join(process.cwd(), "bin");
+log.debug("PATH after adding './bin' :: ", process.env.PATH);
 
 // Get the Firefox binary path
 const ffBinary = fs.readFileSync(path.join(projectRoot, "ff_bin_path.txt"), "utf-8");
