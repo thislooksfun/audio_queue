@@ -89,14 +89,13 @@ function arch() {
         */
         
         geckoPlatform = "linux" + arch();
-        
+        var ffPlatform = "linux" + (arch() === 64 ? 64 : "");
         
         
         // Install Firefox Developer Edition
         console.log("Downloading Firefox Developer Edition...");
         
-        let osName = "linux" + (arch() === 32 ? "" : "64");
-        await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=" + geckoPlatform + "&lang=en-US", "tmp/ffdev.tar.bz2");
+        await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=" + ffPlatform + "&lang=en-US", "tmp/ffdev.tar.bz2");
         console.log("Decompressing...");
         fs.createReadStream("tmp/ffdev.tar.bz2").pipe(bz2()).pipe(tar.extract("./ffdev"));
         binPath = path.join(process.cwd(), "ffdev/firefox-bin");
