@@ -67,3 +67,6 @@ tmp/
 
 # Notes to self
 .scratchpad
+
+# Test script
+test.js
