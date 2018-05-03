@@ -29,100 +29,96 @@ function arch() {
   }
 }
 
+
+async function installFFDev() {
+  // If the app already exists, don't bother.
+  if (fs.existsSync("ffdev")) return;
+  
+  var binPath;
+  switch (process.platform) {
+    case "darwin": {  // macOS
+      // Install Firefox Developer Edition
+      console.log("Downloading Firefox Developer Edition...");
+      await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=osx&lang=en-US", "tmp/ffdev.dmg");
+      console.log("Mounting disk image...");
+      let res = execSync("hdiutil mount tmp/ffdev.dmg").toString();
+      let vol = res.match(/(\/Volumes\/.+)\n/)[1];
+      console.log("Copying...");
+      fs.mkdirSync("ffdev");
+      fs.copySync(path.join(vol, "Firefox Developer Edition.app"), "ffdev/ffdev.app");
+      binPath = path.join(process.cwd(), "ffdev/ffdev.app/Contents/MacOS/firefox-bin");
+      console.log("Unmounting...");
+      execSync(`hdiutil unmount "${vol}"`);
+      break;
+    }
+    // case "win32": {  // Windows
+    //
+    //   geckoPlatform = "win" + arch();
+    //
+    //
+    //   break;
+    // }
+    case "linux": {  // Linux
+      var ffPlatform = "linux" + (arch() === 64 ? 64 : "");
+      
+      
+      // Install Firefox Developer Edition
+      console.log("Downloading Firefox Developer Edition...");
+      
+      await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=" + ffPlatform + "&lang=en-US", "tmp/ffdev.tar.bz2");
+      console.log("Decompressing...");
+      fs.createReadStream("tmp/ffdev.tar.bz2").pipe(bz2()).pipe(tar.extract("./ffdev"));
+      binPath = path.join(process.cwd(), "ffdev/firefox-bin");
+      break;
+    }
+    default: {
+      console.error(`ERROR: Unsupported platform ${process.platform}. Please open an issue at https://github.com/thislooksfun/audio_queue`);
+      process.exit(1);
+    }
+  }
+    
+  console.log("Writing ff_bin_path.txt...");
+  fs.writeFileSync("ff_bin_path.txt", binPath);
+}
+
+
+async function installGeckoDriver() {
+  if (fs.existsSync("bin/geckodriver")) return;
+  
+  var geckoPlatform;
+  switch (process.platform) {
+    case "darwin": {  // macOS
+      geckoPlatform = "macos";
+      break;
+    }
+    // case "win32": {  // Windows
+    //   geckoPlatform = "win" + arch();
+    //   break;
+    // }
+    case "linux": {  // Linux
+      geckoPlatform = "linux" + arch();
+      break;
+    }
+  }
+  
+  console.log("Downloading geckodriver...");
+  let geckoZip = "geckodriver-" + geckodriverVersion + "-" + geckoPlatform + ".tar.gz";
+  await download(geckoDriverURLPrefix + geckoZip, "tmp/geckodriver.tar.gz");
+  console.log("Decompressing...");
+  fs.createReadStream("tmp/geckodriver.tar.gz").pipe(gunzip()).pipe(tar.extract("./bin"));
+}
+
+
 (async function() {
   try {
-    // If the app already exists, don't bother.
-    if (fs.existsSync("ffdev")) return;
-    
     fs.mkdirpSync("tmp");
-    var binPath;
-    var geckoPlatform;
     
-    switch (process.platform) {
-      case "darwin": {
-        /*
-        ███    ███  █████   ██████  ██████  ███████
-        ████  ████ ██   ██ ██      ██    ██ ██
-        ██ ████ ██ ███████ ██      ██    ██ ███████
-        ██  ██  ██ ██   ██ ██      ██    ██      ██
-        ██      ██ ██   ██  ██████  ██████  ███████
-        */
-        
-        geckoPlatform = "macos";
-        
-        
-        // Install Firefox Developer Edition
-        console.log("Downloading Firefox Developer Edition...");
-        await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=osx&lang=en-US", "tmp/ffdev.dmg");
-        console.log("Mounting disk image...");
-        let res = execSync("hdiutil mount tmp/ffdev.dmg").toString();
-        let vol = res.match(/(\/Volumes\/.+)\n/)[1];
-        console.log("Copying...");
-        fs.mkdirSync("ffdev");
-        fs.copySync(path.join(vol, "Firefox Developer Edition.app"), "ffdev/ffdev.app");
-        binPath = path.join(process.cwd(), "ffdev/ffdev.app/Contents/MacOS/firefox-bin");
-        console.log("Unmounting...");
-        execSync(`hdiutil unmount "${vol}"`);
-        break;
-      }
-      // case "win32": {
-      //  /*
-      //  ██     ██ ██ ███    ██ ██████   ██████  ██     ██ ███████
-      //  ██     ██ ██ ████   ██ ██   ██ ██    ██ ██     ██ ██
-      //  ██  █  ██ ██ ██ ██  ██ ██   ██ ██    ██ ██  █  ██ ███████
-      //  ██ ███ ██ ██ ██  ██ ██ ██   ██ ██    ██ ██ ███ ██      ██
-      //   ███ ███  ██ ██   ████ ██████   ██████   ███ ███  ███████
-      //  */
-      //
-      //   geckoPlatform = "win" + arch();
-      //
-      //
-      //   break;
-      // }
-      case "linux": {
-        /*
-        ██      ██ ███    ██ ██    ██ ██   ██
-        ██      ██ ████   ██ ██    ██  ██ ██
-        ██      ██ ██ ██  ██ ██    ██   ███
-        ██      ██ ██  ██ ██ ██    ██  ██ ██
-        ███████ ██ ██   ████  ██████  ██   ██
-        */
-        
-        geckoPlatform = "linux" + arch();
-        var ffPlatform = "linux" + (arch() === 64 ? 64 : "");
-        
-        
-        // Install Firefox Developer Edition
-        console.log("Downloading Firefox Developer Edition...");
-        
-        await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=" + ffPlatform + "&lang=en-US", "tmp/ffdev.tar.bz2");
-        console.log("Decompressing...");
-        fs.createReadStream("tmp/ffdev.tar.bz2").pipe(bz2()).pipe(tar.extract("./ffdev"));
-        binPath = path.join(process.cwd(), "ffdev/firefox-bin");
-        break;
-      }
-      default: {
-        console.error(`ERROR: Unsupported platform ${process.platform}. Please open an issue at https://github.com/thislooksfun/audio_queue`);
-        process.exit(1);
-      }
-    }
-    
-    
-    // Install geckodriver
-    console.log("Downloading geckodriver...");
-    let geckoZip = "geckodriver-" + geckodriverVersion + "-" + geckoPlatform + ".tar.gz";
-    await download(geckoDriverURLPrefix + geckoZip, "tmp/geckodriver.tar.gz");
-    console.log("Decompressing...");
-    fs.createReadStream("tmp/geckodriver.tar.gz").pipe(gunzip()).pipe(tar.extract("./bin"));
-    
+    await installFFDev();
+    await installGeckoDriver();
     
     // Clean up
     console.log("Cleaning up...");
     fs.remove("tmp");
-    
-    
-    console.log("Writing ff_bin_path.txt...");
-    fs.writeFileSync("ff_bin_path.txt", binPath);
   } catch (e) {
     console.log(e);
     process.exit(1);
