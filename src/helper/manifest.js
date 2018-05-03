@@ -3,7 +3,6 @@
 // Global imports
 const fs   = require("fs-extra");
 const path = require("path");
-const {exec} = require("child_process");
 
 // Local imports
 const misc = pquire("misc");
@@ -60,47 +59,26 @@ function lerr(...msgs) {
   return null;
 }
 
-async function installDep(name, version) {
-  // TODO: Check if dep is already installed, and error if version is different
-  return new Promise(function(resolve, reject) {
-    log.trace_(`Installing ${name}@${version}... `);
-    var cmd = `npm install ${name}@${version}`;
-    if (/^win/.test(process.platform)) {  // If windows, ...
-      cmd = `${process.env.comspec} /c ${cmd}`;
-    }
-    exec(cmd, function(err) {
-      if (err != null) {
-        reject(err);
-      } else {
-        log.trace("Done");
-        resolve();
-      }
-    });
-  });
-}
-
-async function installDeps(mnfst) {
-  log.info(`Installing dependencies for ${mnfst.name}...`);
-  log._indent();
-  for (let name in mnfst.dependencies) {
-    let version = mnfst.dependencies[name];
-    await installDep(name, version);
-  }
-  log._deindent();
-}
-
-function loadScript(name, mnfst, servPath) {
+function lazyLoadScript(name, mnfst, servPath) {
   if (path.isAbsolute(mnfst.scripts[name])) {
     return lerr(`Error parsing manifest for '${mnfst.name}': ${name} script path must be relative`);
   }
-  try {
-    let pth = require.resolve(path.relative(__dirname, path.join(servPath, mnfst.scripts[name])));
-    let mod = require(pth);
-    mnfst._reqPaths.push(pth);
-    return mod;
-  } catch (e) {
-    return lerr(`Error loading ${name} script for module '${mnfst.name}':`, e);
-  }
+  
+  let pth = require.resolve(path.relative(__dirname, path.join(servPath, mnfst.scripts[name])));
+  mnfst._reqPaths.push(pth);
+  
+  var _cached = null;
+  return function() {
+    if (_cached == null) {
+      try {
+        let mod = require(pth);
+        _cached = mod;
+      } catch (e) {
+        return lerr(`Error loading ${name} script for module '${mnfst.name}':`, e);
+      }
+    }
+    return _cached.apply(this, ...arguments);
+  };
 }
 
 module.exports = {
@@ -130,14 +108,19 @@ module.exports = {
       return null;  // Error message was aleady printed
     }
     
+    var deps = null;
     if (mnfst.dependencies != null) {
-      await installDeps(mnfst);
+      deps = [];
+      for (let name in mnfst.dependencies) {
+        let version = mnfst.dependencies[name];
+        deps.push({name: name, version: version});
+      }
     }
     
-    let prep = loadScript("prep", mnfst, servPath);
-    let play = loadScript("play", mnfst, servPath);
-    let search = loadScript("search", mnfst, servPath);
-    let getInfo = loadScript("info", mnfst, servPath);
+    let prep    = lazyLoadScript("prep",   mnfst, servPath);
+    let play    = lazyLoadScript("play",   mnfst, servPath);
+    let search  = lazyLoadScript("search", mnfst, servPath);
+    let getInfo = lazyLoadScript("info",   mnfst, servPath);
     
     var ffExtInfo;
     if (mnfst.extension != null) {
@@ -149,6 +132,15 @@ module.exports = {
       ffExtInfo = res.ff;
     }
     
-    return {raw: mnfst, name: mnfst.name, prep: prep, play: play, search: search, getInfo: getInfo, extension: ffExtInfo};
+    return {
+      raw: mnfst,
+      name: mnfst.name,
+      deps: deps,
+      prep: prep,
+      play: play,
+      search: search,
+      getInfo: getInfo,
+      extension: ffExtInfo
+    };
   }
 };

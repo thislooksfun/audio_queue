@@ -4,6 +4,7 @@
 const fs = require("fs-extra");
 const path = require("path");
 // Local imports
+const deps          = pquire("deps");
 const flatten       = pquire("flatten");
 const manifest      = pquire("manifest");
 const {projectRoot} = pquire("misc");
@@ -41,6 +42,7 @@ module.exports = {
     log.debug(`Loading all services from path '${servicesPath}'`);
     log._indent();
     let foundNames = {};
+    let dependencies = [];
     for (let s of fs.readdirSync(servicesPath)) {
       log.debug("Loading service '" + s + "'");
       // TODO: More intellegent package dependency parsing
@@ -62,6 +64,9 @@ module.exports = {
           if (mnfst.extension != null) {
             ffExtManifest.content_scripts.push(mnfst.extension);
           }
+          if (mnfst.deps != null) {
+            dependencies.push(...mnfst.deps);
+          }
         }
       }
     }
@@ -80,6 +85,8 @@ module.exports = {
       }
       log._deprefix();
     }
+    
+    await deps.process(dependencies);
     
     // TODO: (ALPHA) [See above for more info]
     // This is the place where dependency installation should take place.

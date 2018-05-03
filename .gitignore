@@ -64,6 +64,7 @@ firefoxExtension/
 ff_bin_path.txt
 .sass-cache/
 tmp/
+package.services.json
 
 # Notes to self
 .scratchpad
