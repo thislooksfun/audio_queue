@@ -78,7 +78,8 @@ async function installFFDev() {
       
       await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=" + ffPlatform + "&lang=en-US", "tmp/ffdev.tar.bz2");
       console.log("Decompressing...");
-      fs.createReadStream("tmp/ffdev.tar.bz2").pipe(bz2()).pipe(tar.extract("./ffdev"));
+      fs.createReadStream("tmp/ffdev.tar.bz2").pipe(bz2()).pipe(tar.extract("tmp"));
+      fs.moveSync("tmp/firefox", "./ffdev");
       binPath = path.join(process.cwd(), "ffdev/firefox-bin");
       break;
     }
