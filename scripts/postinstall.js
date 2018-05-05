@@ -1,12 +1,13 @@
 "use strict";
 
-const fs       = require("fs-extra");
-const tar      = require("tar-fs");
-const bz2      = require("unbzip2-stream");
-const path     = require("path");
-const gunzip   = require("gunzip-maybe");
-const request  = require("request");
-const execSync = require("child_process").execSync;
+const fs          = require("fs-extra");
+const tar         = require("tar-fs");
+const bz2         = require("unbzip2-stream");
+const path        = require("path");
+const gunzip      = require("gunzip-maybe");
+const request     = require("request");
+const execSync    = require("child_process").execSync;
+const promisepipe = require("promisepipe");
 
 const geckodriverVersion = "v0.20.1";
 const geckoDriverURLPrefix = "https://github.com/mozilla/geckodriver/releases/download/" + geckodriverVersion + "/";
@@ -41,11 +42,11 @@ function geckodriverLinuxPlatform() {
 }
 
 function extract(filePath, decompressor, target) {
-  let fd = fs.createReadStream(filePath).pipe(decompressor).pipe(tar.extract(target));
-  return new Promise(function(resolve, reject) {
-    fd.on("end", resolve);
-    fd.on("error", reject);
-  });
+  return promisepipe(
+    fs.createReadStream(filePath),
+    decompressor,
+    tar.extract(target)
+  );
 }
 
 
@@ -55,21 +56,21 @@ async function installFFDev() {
   
   var binPath;
   switch (process.platform) {
-    case "darwin": {  // macOS
-      // Install Firefox Developer Edition
-      console.log("Downloading Firefox Developer Edition...");
-      await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=osx&lang=en-US", "tmp/ffdev.dmg");
-      console.log("Mounting disk image...");
-      let res = execSync("hdiutil mount tmp/ffdev.dmg").toString();
-      let vol = res.match(/(\/Volumes\/.+)\n/)[1];
-      console.log("Copying...");
-      fs.mkdirSync("ffdev");
-      fs.copySync(path.join(vol, "Firefox Developer Edition.app"), "ffdev/ffdev.app");
-      binPath = path.join(process.cwd(), "ffdev/ffdev.app/Contents/MacOS/firefox-bin");
-      console.log("Unmounting...");
-      execSync(`hdiutil unmount "${vol}"`);
-      break;
-    }
+    // case "darwin": {  // macOS
+    //   // Install Firefox Developer Edition
+    //   console.log("Downloading Firefox Developer Edition...");
+    //   await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=osx&lang=en-US", "tmp/ffdev.dmg");
+    //   console.log("Mounting disk image...");
+    //   let res = execSync("hdiutil mount tmp/ffdev.dmg").toString();
+    //   let vol = res.match(/(\/Volumes\/.+)\n/)[1];
+    //   console.log("Copying...");
+    //   fs.mkdirSync("ffdev");
+    //   fs.copySync(path.join(vol, "Firefox Developer Edition.app"), "ffdev/ffdev.app");
+    //   binPath = path.join(process.cwd(), "ffdev/ffdev.app/Contents/MacOS/firefox-bin");
+    //   console.log("Unmounting...");
+    //   execSync(`hdiutil unmount "${vol}"`);
+    //   break;
+    // }
     // case "win32": {  // Windows
     //
     //   geckoPlatform = "win" + arch();
@@ -77,6 +78,7 @@ async function installFFDev() {
     //
     //   break;
     // }
+    case "darwin":
     case "linux": {  // Linux
       var ffPlatform = "linux" + (arch() === 64 ? 64 : "");
       
