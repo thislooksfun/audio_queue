@@ -51,7 +51,7 @@ function extract(filePath, decompressor, target) {
 
 async function installFFDev() {
   // If the app already exists, don't bother.
-  if (fs.existsSync("ffdev")) return;
+  if (fs.existsSync("ffdev") && fs.existsSync("ff_bin_path.txt")) return;
   
   var binPath;
   switch (process.platform) {
