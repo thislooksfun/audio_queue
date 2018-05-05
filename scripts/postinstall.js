@@ -56,21 +56,21 @@ async function installFFDev() {
   
   var binPath;
   switch (process.platform) {
-    // case "darwin": {  // macOS
-    //   // Install Firefox Developer Edition
-    //   console.log("Downloading Firefox Developer Edition...");
-    //   await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=osx&lang=en-US", "tmp/ffdev.dmg");
-    //   console.log("Mounting disk image...");
-    //   let res = execSync("hdiutil mount tmp/ffdev.dmg").toString();
-    //   let vol = res.match(/(\/Volumes\/.+)\n/)[1];
-    //   console.log("Copying...");
-    //   fs.mkdirSync("ffdev");
-    //   fs.copySync(path.join(vol, "Firefox Developer Edition.app"), "ffdev/ffdev.app");
-    //   binPath = path.join(process.cwd(), "ffdev/ffdev.app/Contents/MacOS/firefox-bin");
-    //   console.log("Unmounting...");
-    //   execSync(`hdiutil unmount "${vol}"`);
-    //   break;
-    // }
+    case "darwin": {  // macOS
+      // Install Firefox Developer Edition
+      console.log("Downloading Firefox Developer Edition...");
+      await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=osx&lang=en-US", "tmp/ffdev.dmg");
+      console.log("Mounting disk image...");
+      let res = execSync("hdiutil mount tmp/ffdev.dmg").toString();
+      let vol = res.match(/(\/Volumes\/.+)\n/)[1];
+      console.log("Copying...");
+      fs.mkdirSync("ffdev");
+      fs.copySync(path.join(vol, "Firefox Developer Edition.app"), "ffdev/ffdev.app");
+      binPath = path.join(process.cwd(), "ffdev/ffdev.app/Contents/MacOS/firefox-bin");
+      console.log("Unmounting...");
+      execSync(`hdiutil unmount "${vol}"`);
+      break;
+    }
     // case "win32": {  // Windows
     //
     //   geckoPlatform = "win" + arch();
@@ -78,7 +78,6 @@ async function installFFDev() {
     //
     //   break;
     // }
-    case "darwin":
     case "linux": {  // Linux
       var ffPlatform = "linux" + (arch() === 64 ? 64 : "");
       
