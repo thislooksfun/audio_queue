@@ -41,7 +41,11 @@ function geckodriverLinuxPlatform() {
 }
 
 function extract(filePath, decompressor, target) {
-  fs.createReadStream(filePath).pipe(decompressor).pipe(tar.extract(target));
+  let fd = fs.createReadStream(filePath).pipe(decompressor).pipe(tar.extract(target));
+  return new Promise(function(resolve, reject) {
+    fd.on("end", resolve);
+    fd.on("error", reject);
+  });
 }
 
 
