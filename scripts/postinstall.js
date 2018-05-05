@@ -40,6 +40,10 @@ function geckodriverLinuxPlatform() {
   }
 }
 
+function extract(filePath, decompressor, target) {
+  fs.createReadStream(filePath).pipe(decompressor).pipe(tar.extract(target));
+}
+
 
 async function installFFDev() {
   // If the app already exists, don't bother.
@@ -78,7 +82,7 @@ async function installFFDev() {
       
       await download("https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=" + ffPlatform + "&lang=en-US", "tmp/ffdev.tar.bz2");
       console.log("Decompressing...");
-      fs.createReadStream("tmp/ffdev.tar.bz2").pipe(bz2()).pipe(tar.extract("tmp"));
+      await extract("tmp/ffdev.tar.bz2", bz2(), "tmp");
       fs.moveSync("tmp/firefox", "./ffdev");
       binPath = path.join(process.cwd(), "ffdev/firefox-bin");
       break;
@@ -117,7 +121,7 @@ async function installGeckoDriver() {
   let geckoZip = "geckodriver-" + geckodriverVersion + "-" + geckoPlatform + ".tar.gz";
   await download(geckoDriverURLPrefix + geckoZip, "tmp/geckodriver.tar.gz");
   console.log("Decompressing...");
-  fs.createReadStream("tmp/geckodriver.tar.gz").pipe(gunzip()).pipe(tar.extract("./bin"));
+  await extract("tmp/geckodriver.tar.gz", gunzip(), "./bin");
 }
 
 
