@@ -20,11 +20,22 @@ function download(url, filename) {
 function arch() {
   switch (process.arch) {
     case "x64": return 64;
-    // case "arm": TODO
+    // case "arm":
     default: {
       console.error(`ERROR: Unsupported architecture ${process.arch}. Please open an issue at https://github.com/thislooksfun/audio_queue`);
       // process.exit(1);
       return 32;
+    }
+  }
+}
+
+function geckodriverLinuxPlatform() {
+  switch (process.arch) {
+    case "x64": return "linux64";
+    case "arm": return "arm7hf";
+    default: {
+      console.error(`ERROR: Unsupported architecture ${process.arch}. Please open an issue at https://github.com/thislooksfun/audio_queue`);
+      return "linux32";
     }
   }
 }
@@ -96,7 +107,7 @@ async function installGeckoDriver() {
     //   break;
     // }
     case "linux": {  // Linux
-      geckoPlatform = "linux" + arch();
+      geckoPlatform = geckodriverLinuxPlatform();
       break;
     }
   }
