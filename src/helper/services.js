@@ -31,10 +31,10 @@ function buildGetInfo(infoFn, name) {
 
 module.exports = {
   load: async function() {
-    let ffExtPath = path.join(projectRoot, "firefoxExtension");
+    let ffExtPath = path.join(projectRoot, "chromeExtension");
     let ffExtManPath = path.join(ffExtPath, "manifest.json");
     fs.removeSync(ffExtPath);
-    fs.copySync(path.join(projectRoot, "firefoxExtension_template"), ffExtPath);
+    fs.copySync(path.join(projectRoot, "chromeExtension_template"), ffExtPath);
     let ffExtManifest = require(ffExtManPath);
     
     // Load services
@@ -60,7 +60,10 @@ module.exports = {
           
           // TODO: Process the extension script stuff in helper/manifest.js
           if (mnfst.extension != null) {
-            ffExtManifest.content_scripts.push(mnfst.extension);
+            ffExtManifest.content_scripts.push(mnfst.extension.contentScripts);
+            if (mnfst.extension.webAccess != null) {
+              ffExtManifest.web_accessible_resources.push(...mnfst.extension.webAccess);
+            }
           }
         }
       }

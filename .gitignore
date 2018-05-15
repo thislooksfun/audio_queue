@@ -59,9 +59,9 @@ typings/
 
 # Generated files
 bin/
-ffdev/
-firefoxExtension/
-ff_bin_path.txt
+chrome/
+chromeExtension/
+chrome_bin_path.txt
 .sass-cache/
 tmp/
 

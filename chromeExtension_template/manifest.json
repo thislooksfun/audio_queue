@@ -25,5 +25,9 @@
   
   "background": {
     "scripts": ["builtin/background/auto_mute.js"]
-  }
+  },
+  
+  "web_accessible_resources": [
+    
+  ]
 }

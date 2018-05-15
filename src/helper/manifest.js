@@ -28,9 +28,9 @@ const requiredKeys = {
 
 const ext_requiredKeys = {
   matches: "[string]",
-  js: "[string]",
+  js: "[object]",
 };
-function processExtensionInfo(ext, servPath, servName, ffExtPath) {
+function processExtensionInfo(ext, servPath, servName, extPath) {
   if (typeof ext !== "object") {
     return {s: false, msgs: ["Key 'extension' must be a dict"]};
   }
@@ -38,19 +38,24 @@ function processExtensionInfo(ext, servPath, servName, ffExtPath) {
     return {s: false};
   }
   
-  var servExtPath = path.join(ffExtPath, "scripts", servName);
+  var servExtPath = path.join(extPath, "scripts", servName);
   fs.mkdirpSync(servExtPath);
-  var ffJS = [];
+  var csJS = [];
+  var waJS = [];
   for (var f of ext.js) {
-    if (path.extname(f) !== ".js") continue;
+    if (path.extname(f.path) !== ".js") continue;
     
-    var fPath = path.join(servPath, f);
-    var ffPath = path.join(servExtPath, path.basename(f));
-    fs.copySync(fPath, ffPath);
-    ffJS.push(path.relative(ffExtPath, ffPath));
+    var fPath = path.join(servPath, f.path);
+    var relPath = path.join(servExtPath, path.basename(f.path));
+    fs.copySync(fPath, relPath);
+    var jsPath = path.relative(extPath, relPath);
+    csJS.push(jsPath);
+    if (f.web_accessible) {
+      waJS.push(jsPath);
+    }
   }
   
-  return {s: true, ff: {matches: ext.matches, js: ffJS, run_at: ext.run_at}};
+  return {s: true, cs: {matches: ext.matches, js: csJS, run_at: ext.run_at}, wa: waJS};
 }
 
 
@@ -104,7 +109,7 @@ function loadScript(name, mnfst, servPath) {
 }
 
 module.exports = {
-  parse: async function(servicesPath, serviceFolder, ffExtPath) {
+  parse: async function(servicesPath, serviceFolder, extPath) {
     var servPath = path.join(servicesPath, serviceFolder);
     var manPath = path.join(servPath, "manifest.json");
     log.debug(` > Parsing manifest ${manPath}`);
@@ -139,16 +144,16 @@ module.exports = {
     let search = loadScript("search", mnfst, servPath);
     let getInfo = loadScript("info", mnfst, servPath);
     
-    var ffExtInfo;
+    var ext;
     if (mnfst.extension != null) {
-      var res = processExtensionInfo(mnfst.extension, servPath, mnfst.name, ffExtPath);
+      var res = processExtensionInfo(mnfst.extension, servPath, mnfst.name, extPath);
       if (!res.s) {
         if (res.msgs != null) log.error(`Error loading extension info for module '${mnfst.name}':`, ...res.msgs);
         return null;
       }
-      ffExtInfo = res.ff;
+      ext = {contentScripts: res.cs, webAccess: res.wa};
     }
     
-    return {raw: mnfst, name: mnfst.name, prep: prep, play: play, search: search, getInfo: getInfo, extension: ffExtInfo};
+    return {raw: mnfst, name: mnfst.name, prep: prep, play: play, search: search, getInfo: getInfo, extension: ext};
   }
 };

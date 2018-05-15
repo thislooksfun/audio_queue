@@ -4,7 +4,7 @@
 const path      = require("path");
 const fs        = require("fs-extra");
 const webdriver = require("selenium-webdriver");
-const firefox   = require("selenium-webdriver/firefox");
+const chrome   = require("selenium-webdriver/chrome");
 // Local imports
 const {projectRoot} = pquire("misc");
 const {headless}    = pquire("settings");
@@ -14,24 +14,19 @@ log.trace("Adding './bin' to path");
 process.env.PATH += ":" + path.join(process.cwd(), "bin");
 log.debug("PATH after adding './bin' :: ", process.env.PATH);
 
-// Get the Firefox binary path
-const ffBinary = fs.readFileSync(path.join(projectRoot, "ff_bin_path.txt"), "utf-8");
+// Get the Chrome binary path
+const chromeBinary = fs.readFileSync(path.join(projectRoot, "chrome_bin_path.txt"), "utf-8");
 
-// Add the Firefox extension
-const profile = new firefox.Profile();
-profile.setPreference("xpinstall.signatures.required", false);
-profile.addExtension(path.join(projectRoot, "firefoxExtension"));
-
-// Set the Firefox options
-const firefoxOptions = new firefox.Options();
-firefoxOptions.setBinary(ffBinary);
-firefoxOptions.setProfile(profile);
+// Set the Chrome options
+const chromeOptions = new chrome.Options();
+chromeOptions.setChromeBinaryPath(chromeBinary);
+chromeOptions.addArguments("load-extension=" + path.join(projectRoot, "chromeExtension"));
 if (headless) {
   log.trace("Settings drivers to headless mode");
-  firefoxOptions.headless();
+  chromeOptions.headless();
 }
 
 module.exports = {
   // Creates a new driver
-  newDriver() { return new webdriver.Builder().forBrowser("firefox").setFirefoxOptions(firefoxOptions).build(); }
+  newDriver() { return new webdriver.Builder().forBrowser("chrome").setChromeOptions(chromeOptions).build(); }
 };
