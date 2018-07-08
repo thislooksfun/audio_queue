@@ -1,7 +1,0 @@
-env:
-  browser: true
-  node: false
-extends: '../../../.eslintrc.yml'
-parserOptions:
-  ecmaFeatures:
-    globalReturn: true

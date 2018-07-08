@@ -4,8 +4,6 @@
 const queue   = pquire("helper/queue");
 const {sleep} = pquire("helper/misc");
 
-const unmuteScript = "window.postMessage({tlf_audio_queue_mute_signal: false}, '*');";
-
 module.exports = async function() {
   try {
     log.info("Player started");
